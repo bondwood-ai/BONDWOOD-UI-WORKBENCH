@@ -11,7 +11,7 @@
     --bg: #0f1210; --surface: #1a1f1c; --surface-hover: #232a26;
     --text: #e8e8e8; --text-mid: #aaa; --text-dim: #666; --text-faint: #555;
     --border: rgba(255,255,255,0.08); --input-bg: #1a1f1c;
-    --input-border: rgba(255,255,255,0.1); --input-border-focus: rgba(7,40,235,0.5);
+    --input-border: rgba(255,255,255,0.1);
     --accent: #4a7aff; --accent-dim: rgba(74,122,255,0.15);
     --card-body-title: #e8e8e8; --card-body-strong: #e0e0e0;
     --topbar-bg: rgba(15,18,16,0.92); --topbar-border: rgba(255,255,255,0.06);
@@ -22,7 +22,7 @@
     --bg: #f4f5f3; --surface: #ffffff; --surface-hover: #f0f0ee;
     --text: #1a1a1a; --text-mid: #555; --text-dim: #888; --text-faint: #aaa;
     --border: rgba(0,0,0,0.08); --input-bg: #ffffff;
-    --input-border: rgba(0,0,0,0.12); --input-border-focus: rgba(7,40,235,0.5);
+    --input-border: rgba(0,0,0,0.12);
     --accent: #0728eb; --accent-dim: rgba(7,40,235,0.08);
     --card-body-title: #1a1a1a; --card-body-strong: #1a1a1a;
     --topbar-bg: rgba(244,245,243,0.92); --topbar-border: rgba(0,0,0,0.06);
@@ -30,8 +30,10 @@
     --shadow: 0 2px 12px rgba(0,0,0,0.08); --star-shadow: 0 0 20px rgba(244,180,0,0.2);
   }
   body { min-height:100vh; background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; transition:background 0.25s,color 0.25s; }
+
+  /* ── TOP BAR ── */
   .top-bar { position:sticky; top:0; z-index:100; background:var(--topbar-bg); backdrop-filter:blur(16px); border-bottom:1px solid var(--topbar-border); padding:16px 24px; transition:background 0.25s,border-color 0.25s; }
-  .top-bar-inner { max-width:1440px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  .top-bar-inner { max-width:1600px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
   .top-bar h1 { font-size:18px; font-weight:700; letter-spacing:-0.3px; }
   .top-bar .sub { font-size:11px; color:var(--text-dim); margin-top:2px; }
   .top-bar-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
@@ -46,7 +48,14 @@
   .btn-fav-filter:hover { filter:brightness(1.15); }
   .btn-clear { background:rgba(255,80,80,0.1); color:#e07060; border:none; border-radius:6px; padding:6px 12px; font-size:11px; font-weight:500; cursor:pointer; }
   .btn-clear:hover { background:rgba(255,80,80,0.2); }
-  .controls-wrap { max-width:1440px; margin:0 auto; padding:20px 24px 0; }
+  .btn-save { background:rgba(74,122,255,0.12); color:var(--accent); border:none; border-radius:6px; padding:6px 14px; font-size:11px; font-weight:600; cursor:pointer; transition:all 0.15s; }
+  .btn-save:hover { filter:brightness(1.15); }
+  .btn-save.has-save { background:var(--accent); color:#fff; }
+  .save-indicator { font-size:10px; color:var(--text-faint); transition:all 0.3s; }
+  .save-indicator.flash { color:#2B6D51; font-weight:600; }
+
+  /* ── CONTROLS ── */
+  .controls-wrap { max-width:1600px; margin:0 auto; padding:20px 24px 0; }
   .controls { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px 24px; display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap; transition:background 0.25s,border-color 0.25s; }
   .control-group { flex:1 1 180px; }
   .control-group.wide { flex:1 1 240px; }
@@ -70,37 +79,73 @@
   .custom-select-option.hidden { display:none; }
   .btn-add { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 28px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; white-space:nowrap; flex-shrink:0; }
   .btn-add:hover { filter:brightness(1.15); }
-  .quick-row { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; align-items:center; }
+  .quick-row { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; align-items:center; max-height:68px; overflow-y:auto; padding-right:4px; }
+  .quick-row::-webkit-scrollbar { width:3px; } .quick-row::-webkit-scrollbar-thumb { background:var(--text-faint); border-radius:2px; }
   .quick-label { font-size:10px; color:var(--text-faint); margin-right:4px; }
   .quick-btn { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:4px 10px; font-size:10px; color:var(--text-dim); cursor:pointer; transition:all 0.15s; white-space:nowrap; font-family:'Inter',sans-serif; }
   .quick-btn:hover { border-color:var(--accent); color:var(--accent); }
-  .grid-wrap { max-width:1440px; margin:0 auto; padding:24px 24px 60px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(370px,1fr)); gap:20px; }
+
+  /* ── GRID — wider cards ── */
+  .grid-wrap { max-width:1600px; margin:0 auto; padding:24px 24px 60px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(480px,1fr)); gap:20px; }
   .empty-state { text-align:center; padding:80px 20px; color:var(--text-faint); font-size:14px; }
+
+  /* ── CARD ── */
   .card { border-radius:12px; overflow:hidden; border:1px solid var(--border); background:var(--surface); transition:all 0.2s; position:relative; box-shadow:var(--shadow); cursor:grab; }
   .card:active { cursor:grabbing; }
   .card.dragging { opacity:0.4; transform:scale(0.97); }
   .card.drag-over { outline:2px dashed var(--accent); outline-offset:3px; }
+  .card.drag-over-top { border-top:3px solid var(--accent); }
+  .card.drag-over-bottom { border-bottom:3px solid var(--accent); }
   .card.starred { border:2px solid #f4b400; box-shadow:var(--star-shadow); }
-  .card .fav-badge { display:none; position:absolute; top:8px; left:8px; z-index:10; background:#f4b400; color:#1a1a1a; font-size:9px; font-weight:700; padding:2px 8px; border-radius:4px; letter-spacing:1px; text-transform:uppercase; }
+  .card .drag-grip { position:absolute; top:50%; left:0; transform:translateY(-50%); width:12px; height:40px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; opacity:0; transition:opacity 0.2s; cursor:grab; z-index:5; padding-left:2px; }
+  .card:hover .drag-grip { opacity:0.5; }
+  .card .drag-grip span { display:block; width:3px; height:3px; border-radius:50%; background:var(--text-dim); }
+  .card .fav-badge { display:none; position:absolute; top:8px; right:8px; z-index:10; background:#f4b400; color:#1a1a1a; font-size:9px; font-weight:700; padding:2px 8px; border-radius:4px; letter-spacing:1px; text-transform:uppercase; }
   .card.starred .fav-badge { display:block; }
-  .card-banner { padding:14px 16px 0; position:relative; }
+
+  /* Card Banner */
+  .card-banner { padding:14px 18px 0; position:relative; }
   .card-banner-inner { display:flex; align-items:center; gap:10px; padding-bottom:10px; }
-  .card-banner-hamburger { color:#fff; opacity:0.8; flex-shrink:0; }
-  .card-banner-title { font-weight:700; font-size:14px; line-height:1.1; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .card-banner-accent { height:3px; margin:0 -16px; }
-  .card-app-body { padding:14px 16px 10px; min-height:200px; }
-  .card-app-body .app-module-title { font-weight:700; font-size:14px; color:var(--card-body-title); margin-bottom:2px; letter-spacing:0.3px; }
-  .card-app-body .app-subtitle { font-size:9px; color:var(--text-dim); margin-bottom:10px; }
+  .card-banner-hamburger { cursor:pointer; flex-shrink:0; opacity:0.85; transition:opacity 0.15s; }
+  .card-banner-hamburger:hover { opacity:1; }
+  .card-banner-logo { height:22px; width:auto; max-width:80px; object-fit:contain; flex-shrink:0; }
+  .card-banner-title { font-weight:700; font-size:15px; line-height:1.1; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .card-banner-accent { height:3px; margin:0 -18px; }
+
+  /* Hamburger Panel */
+  .card-ham-panel { display:none; padding:12px 18px 14px; border-bottom:1px solid var(--border); background:var(--surface-hover); }
+  .card-ham-panel.open { display:block; }
+  .card-ham-brand-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+  .card-ham-brand-logo { height:32px; width:auto; max-width:120px; object-fit:contain; border-radius:4px; }
+  .card-ham-brand-name { font-size:12px; font-weight:700; color:var(--card-body-title); }
+  .card-ham-brand-num { font-size:10px; color:var(--text-dim); }
+  .card-ham-colors { display:flex; gap:6px; margin-top:4px; }
+  .card-ham-swatch { width:20px; height:20px; border-radius:4px; border:1px solid rgba(128,128,128,0.3); }
+  .card-ham-swatch-label { font-size:8px; color:var(--text-faint); text-align:center; margin-top:1px; }
+
+  /* Card App Body — more room */
+  .card-app-body { padding:16px 18px 12px; min-height:280px; }
+  .card-app-body .app-module-title { font-weight:700; font-size:15px; color:var(--card-body-title); margin-bottom:2px; letter-spacing:0.3px; }
+  .card-app-body .app-subtitle { font-size:9.5px; color:var(--text-dim); margin-bottom:10px; }
+
+  /* Section Headers (collapsible style like real app) */
+  .mini-section-hdr { font-size:11px; font-weight:700; color:var(--card-body-title); margin:10px 0 6px; display:flex; align-items:center; gap:6px; }
+  .mini-section-hdr::before { content:'▾'; font-size:9px; color:var(--text-dim); }
+
+  /* Mini Stats Grid */
   .mini-stats { display:flex; border-top:3px solid var(--stat-accent,#000); border-radius:6px; overflow:hidden; border:1px solid var(--border); margin-bottom:10px; background:var(--surface); }
-  .mini-stat { flex:1; padding:6px 8px; border-left:1px solid var(--border); min-width:0; }
+  .mini-stat { flex:1; padding:7px 10px; border-left:1px solid var(--border); min-width:0; }
   .mini-stat:first-child { border-left:none; }
-  .mini-stat-label { font-size:7px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-dim); margin-bottom:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .mini-stat-value { font-size:12px; font-weight:700; color:var(--card-body-title); letter-spacing:0.3px; }
+  .mini-stat-label { font-size:7.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-dim); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mini-stat-value { font-size:13px; font-weight:700; color:var(--card-body-title); letter-spacing:0.3px; }
+  .mini-stat-sub { font-size:7px; color:var(--text-faint); margin-top:1px; }
   .mini-stat-value.warn { color:#d97706; } .mini-stat-value.danger { color:#FA050F; } .mini-stat-value.green { color:#2B6D51; }
-  .mini-table { width:100%; border-collapse:collapse; font-size:8px; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
-  .mini-table thead th { padding:5px 6px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; font-size:7px; color:#fff; text-align:left; white-space:nowrap; }
-  .mini-table tbody td { padding:4px 6px; border-top:1px solid var(--border); color:var(--text-mid); white-space:nowrap; }
+
+  /* Mini Table */
+  .mini-table { width:100%; border-collapse:collapse; font-size:8.5px; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+  .mini-table thead th { padding:5px 7px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px; font-size:7px; color:#fff; text-align:left; white-space:nowrap; }
+  .mini-table tbody td { padding:4px 7px; border-top:1px solid var(--border); color:var(--text-mid); white-space:nowrap; }
   .mini-badge { display:inline-block; padding:1px 6px; border-radius:8px; font-size:7px; font-weight:700; text-transform:uppercase; }
   .mini-badge.active { background:rgba(43,109,81,0.12); color:#2B6D51; }
   .mini-badge.expiring { background:rgba(217,119,6,0.12); color:#d97706; }
@@ -108,28 +153,67 @@
   .mini-badge.draft { background:rgba(107,114,128,0.12); color:#6b7280; }
   .mini-badge.pending { background:rgba(7,40,235,0.1); color:#0728eb; }
   .mini-badge.approved { background:rgba(22,163,74,0.12); color:#15803d; }
+
+  /* Mini Filter Bar */
   .mini-filter-bar { display:flex; gap:4px; margin-bottom:8px; align-items:center; }
   .mini-search { flex:1; padding:3px 6px; border:1px solid var(--border); border-radius:4px; font-size:8px; background:var(--input-bg); color:var(--text-dim); font-family:inherit; }
   .mini-select { padding:3px 6px; border:1px solid var(--border); border-radius:4px; font-size:8px; background:var(--input-bg); color:var(--text-dim); font-family:inherit; }
+
+  /* Mini Tabs */
   .mini-tabs { display:flex; gap:2px; margin-bottom:8px; }
   .mini-tab { padding:3px 8px; border-radius:4px; font-size:7.5px; font-weight:600; color:var(--text-dim); background:var(--surface-hover); border:1px solid var(--border); }
   .mini-tab.active { color:#fff; border-color:transparent; }
+
+  /* Mini Donut Grid */
   .mini-donut-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
   .mini-bucket { border-radius:8px; overflow:hidden; border:1px solid var(--border); }
-  .mini-bucket-header { padding:5px 8px; font-size:8px; font-weight:700; color:#fff; }
+  .mini-bucket-header { padding:5px 8px; font-size:8.5px; font-weight:700; color:#fff; }
   .mini-bucket-body { padding:8px; display:flex; align-items:center; gap:8px; background:var(--surface); }
   .mini-bucket-body canvas { width:48px; height:48px; }
-  .mini-bucket-stats { font-size:7px; color:var(--text-dim); line-height:1.5; }
+  .mini-bucket-stats { font-size:7.5px; color:var(--text-dim); line-height:1.5; }
   .mini-bucket-stats strong { color:var(--card-body-title); }
-  .mini-chart { height:60px; border-radius:6px; border:1px solid var(--border); background:var(--surface-hover); display:flex; align-items:flex-end; padding:4px; gap:2px; overflow:hidden; }
+
+  /* Mini Chart */
+  .mini-chart { height:65px; border-radius:6px; border:1px solid var(--border); background:var(--surface-hover); display:flex; align-items:flex-end; padding:4px; gap:2px; overflow:hidden; }
   .mini-chart-bar { flex:1; border-radius:2px 2px 0 0; min-width:4px; transition:height 0.3s; }
+
+  /* Mini Form */
   .mini-form-row { display:flex; gap:6px; margin-bottom:6px; }
   .mini-form-field { flex:1; padding:4px 6px; border:1px solid var(--border); border-radius:4px; font-size:8px; color:var(--text-dim); background:var(--input-bg); }
   .mini-form-label { font-size:7px; font-weight:700; text-transform:uppercase; color:var(--text-dim); margin-bottom:2px; letter-spacing:0.3px; }
   .mini-btn { padding:3px 10px; border-radius:4px; font-size:7.5px; font-weight:600; border:none; color:#fff; cursor:default; }
+
+  /* Heatmap */
   .mini-heatmap { display:grid; grid-template-columns:repeat(8,1fr); gap:2px; }
   .mini-hm-cell { height:12px; border-radius:2px; }
-  .card-footer { padding:10px 16px 12px; border-top:1px solid var(--footer-border); display:flex; justify-content:space-between; align-items:flex-end; }
+
+  /* ── BUTTERFLY CHART (Open Enrollment) ── */
+  .butterfly-chart { width:100%; font-size:7.5px; }
+  .butterfly-row { display:flex; align-items:center; gap:0; margin-bottom:2px; height:16px; }
+  .butterfly-in-bar-wrap { width:80px; display:flex; justify-content:flex-end; }
+  .butterfly-in-bar { height:12px; border-radius:2px 0 0 2px; min-width:1px; }
+  .butterfly-in-val { width:22px; text-align:right; font-weight:600; padding-right:3px; font-variant-numeric:tabular-nums; }
+  .butterfly-district { flex:1; text-align:center; padding:0 3px; border-radius:3px; color:#fff; font-weight:700; font-size:7px; line-height:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; }
+  .butterfly-net { width:30px; text-align:right; font-weight:700; font-variant-numeric:tabular-nums; padding-right:3px; }
+  .butterfly-out-val { width:22px; text-align:left; font-variant-numeric:tabular-nums; padding-left:3px; }
+  .butterfly-out-bar-wrap { width:80px; }
+  .butterfly-out-bar { height:12px; border-radius:0 2px 2px 0; min-width:1px; }
+  .butterfly-header { display:flex; align-items:center; gap:0; margin-bottom:4px; font-size:7px; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.3px; }
+  .butterfly-header > * { text-align:center; }
+
+  /* ── COHORT DIAGONAL HEATMAP ── */
+  .cohort-grid { width:100%; overflow-x:auto; }
+  .cohort-grid table { border-collapse:collapse; width:100%; font-size:7px; font-variant-numeric:tabular-nums; }
+  .cohort-grid th, .cohort-grid td { padding:2px 3px; text-align:center; white-space:nowrap; border:1px solid var(--border); min-width:28px; }
+  .cohort-grid th { font-weight:700; font-size:6.5px; color:var(--text-dim); text-transform:uppercase; background:var(--surface-hover); position:sticky; top:0; }
+  .cohort-grid .grade-label { text-align:right; font-weight:700; color:var(--text-dim); background:var(--surface-hover); position:sticky; left:0; min-width:20px; }
+  .cohort-grid .cohort-cell { border-radius:3px; font-weight:700; color:#fff; }
+  .cohort-grid .cohort-pct { font-size:5.5px; color:rgba(255,255,255,0.7); display:block; line-height:1; }
+  .cohort-grid .summary-row td { font-weight:700; font-size:6.5px; background:var(--surface-hover); color:var(--card-body-title); }
+  .cohort-grid .summary-row .row-label { font-size:6px; }
+
+  /* Card Footer */
+  .card-footer { padding:10px 18px 12px; border-top:1px solid var(--footer-border); display:flex; justify-content:space-between; align-items:flex-end; }
   .card-font-labels { font-size:9.5px; color:var(--text-dim); }
   .card-font-labels .tag { color:var(--accent); font-weight:600; }
   .card-font-labels div { margin-bottom:2px; }
@@ -143,11 +227,11 @@
   .btn-dup:hover { opacity:0.8; }
   .btn-del { background:rgba(255,80,80,0.1); font-size:10px; color:#e07060; }
   .btn-del:hover { background:rgba(255,80,80,0.2); }
-  @media (max-width:500px) { .grid { grid-template-columns:1fr; } .controls { flex-direction:column; } .control-group { flex:1 1 100%; } }
+  @media (max-width:560px) { .grid { grid-template-columns:1fr; } .controls { flex-direction:column; } .control-group { flex:1 1 100%; } }
 </style>
 </head>
 <body>
-<div class="top-bar"><div class="top-bar-inner"><div><h1>UI Workbench</h1><div class="sub">Bondwood — App Preview &amp; Typography Explorer</div></div><div class="top-bar-actions"><button class="btn-fav-filter" id="btnFavFilter" style="display:none;" onclick="toggleFavFilter()"></button><span class="card-count" id="cardCount">0 cards</span><button class="btn-clear" id="btnClear" style="display:none;" onclick="clearAll()">Clear all</button><div class="theme-toggle-wrap"><span class="theme-toggle-label" id="themeLabel">Dark</span><div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode"></div></div></div></div></div>
+<div class="top-bar"><div class="top-bar-inner"><div><h1>UI Workbench</h1><div class="sub">Bondwood — App Preview &amp; Typography Explorer</div></div><div class="top-bar-actions"><button class="btn-fav-filter" id="btnFavFilter" style="display:none;" onclick="toggleFavFilter()"></button><span class="card-count" id="cardCount">0 cards</span><button class="btn-save" id="btnSave" onclick="saveState()" title="Save current layout to browser">💾 Save</button><button class="btn-save" id="btnLoad" style="display:none;" onclick="loadState()" title="Restore saved layout">📂 Load</button><span class="save-indicator" id="saveIndicator"></span><button class="btn-clear" id="btnClear" style="display:none;" onclick="clearAll()">Clear all</button><div class="theme-toggle-wrap"><span class="theme-toggle-label" id="themeLabel">Dark</span><div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode"></div></div></div></div></div>
 <div class="controls-wrap"><div class="controls"><div class="control-group"><label>App Preview</label><div class="custom-select" id="csApp"></div></div><div class="control-group wide"><label>District Brand</label><div class="custom-select" id="csBrand"></div></div><div class="control-group wide"><label>Display / Title Font</label><div class="custom-select" id="csDisplay"></div></div><div class="control-group wide"><label>Body / UI Font</label><div class="custom-select" id="csBody"></div></div><button class="btn-add" onclick="addCard()">+ Add Preview</button></div><div class="quick-row" id="quickRow"><span class="quick-label">Quick combos:</span></div></div>
 <div class="grid-wrap"><div class="grid" id="grid"></div><div class="empty-state" id="emptyState">Pick an app, brand, and fonts above — then click "+ Add Preview" to start comparing.</div></div>
 <script>
@@ -640,11 +724,48 @@ function buildBrandSelect(containerId) {
   search.className = "custom-select-search";
   search.placeholder = "Search districts…";
   dropdown.appendChild(search);
+
+  // Build sorted display order: [Bondwood Default] → [AMSD by district#] → [Others alpha]
+  const parseNum = n => { const f = parseFloat(n); return isNaN(f) ? 99999 : f; };
+  const sortedIndices = [];
+  // 1) Bondwood Default (idx 0)
+  sortedIndices.push(0);
+  // 2) AMSD sorted by district number
+  const amsd = [];
+  const others = [];
   DISTRICTS.forEach((d, i) => {
+    if (i === 0) return; // skip default
+    if (d.org === 'AMSD') amsd.push(i);
+    else others.push(i);
+  });
+  amsd.sort((a, b) => parseNum(DISTRICTS[a].n) - parseNum(DISTRICTS[b].n));
+  others.sort((a, b) => DISTRICTS[a].name.localeCompare(DISTRICTS[b].name));
+  sortedIndices.push(...amsd, ...others);
+
+  // Add section headers
+  function addDivider(text) {
+    const div = document.createElement("div");
+    div.style.cssText = "padding:6px 14px 4px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);border-top:1px solid var(--border);margin-top:2px;pointer-events:none;user-select:none;";
+    div.className = "brand-divider";
+    div.textContent = text;
+    dropdown.appendChild(div);
+  }
+
+  let section = '';
+  sortedIndices.forEach(i => {
+    const d = DISTRICTS[i];
+    const newSection = i === 0 ? 'default' : (d.org === 'AMSD' ? 'amsd' : 'other');
+    if (newSection !== section) {
+      section = newSection;
+      if (newSection === 'amsd') addDivider('AMSD Districts (by #)');
+      else if (newSection === 'other') addDivider('All Other Districts (A–Z)');
+    }
     const opt = document.createElement("div");
     opt.className = "custom-select-option" + (i === 0 ? " selected" : "");
     opt.dataset.idx = i;
-    opt.innerHTML = '<span class="brand-swatch" style="background:'+d.p+'"></span><span class="opt-label">'+d.name+'</span>'+(d.city ? '<span class="opt-sub">'+d.city+'</span>' : '');
+    const numLabel = d.n !== '0' ? '<span class="opt-sub">#'+d.n+'</span>' : '';
+    const cityLabel = d.city ? '<span class="opt-sub">'+d.city+'</span>' : '';
+    opt.innerHTML = '<span class="brand-swatch" style="background:'+d.p+'"></span><span class="opt-label">'+d.name+'</span>'+numLabel+cityLabel;
     opt.addEventListener("click", () => {
       container.dataset.selectedIdx = i;
       trigger.textContent = d.name;
@@ -661,6 +782,16 @@ function buildBrandSelect(containerId) {
     dropdown.querySelectorAll(".custom-select-option").forEach(o => {
       const d = DISTRICTS[o.dataset.idx];
       o.classList.toggle("hidden", !(d.name.toLowerCase().includes(lower) || d.city.toLowerCase().includes(lower) || d.n.includes(lower)));
+    });
+    // Hide/show section dividers based on whether they have visible children after them
+    dropdown.querySelectorAll(".brand-divider").forEach(div => {
+      let next = div.nextElementSibling;
+      let anyVisible = false;
+      while (next && !next.classList.contains("brand-divider")) {
+        if (!next.classList.contains("hidden")) anyVisible = true;
+        next = next.nextElementSibling;
+      }
+      div.style.display = anyVisible ? '' : 'none';
     });
   }
   search.addEventListener("input", () => filterOpts(search.value));
@@ -715,8 +846,8 @@ function appBody(appId, df, bf, brand) {
 
   const miniStats = (items, accent) => {
     let h = '<div class="mini-stats" style="--stat-accent:'+accent+'">';
-    items.forEach(([label, val, cls]) => {
-      h += '<div class="mini-stat"><div class="mini-stat-label" style="font-family:'+bF+'">'+label+'</div><div class="mini-stat-value'+(cls?' '+cls:'')+'" style="font-family:'+dF+'">'+val+'</div></div>';
+    items.forEach(([label, val, cls, sub]) => {
+      h += '<div class="mini-stat"><div class="mini-stat-label" style="font-family:'+bF+'">'+label+'</div><div class="mini-stat-value'+(cls?' '+cls:'')+'" style="font-family:'+dF+'">'+val+'</div>'+(sub?'<div class="mini-stat-sub" style="font-family:'+bF+'">'+sub+'</div>':'')+'</div>';
     });
     return h + '</div>';
   };
@@ -752,11 +883,7 @@ function appBody(appId, df, bf, brand) {
     heights.forEach(ht => { h += '<div class="mini-chart-bar" style="height:'+ht+'%;background:'+p+'"></div>'; });
     return h + '</div>';
   };
-  const heatmap = (n) => {
-    let h = '<div class="mini-heatmap">';
-    for (let i=0; i<n; i++) { const op = (0.15 + Math.random()*0.85).toFixed(2); h += '<div class="mini-hm-cell" style="background:'+p+';opacity:'+op+'"></div>'; }
-    return h + '</div>';
-  };
+  const sectionHdr = (title) => '<div class="mini-section-hdr" style="font-family:'+dF+'">'+title+'</div>';
   const dn = brand.name !== "Bondwood Default" ? brand.name : "";
 
   switch(appId) {
@@ -767,7 +894,8 @@ function appBody(appId, df, bf, brand) {
         + miniTbl(["Contract #","Vendor","Value","Status"],[
           ["CTR-001","Acme Supplies","$125,000",{html:badge("Active","active")}],
           ["CTR-002","TechPro Solutions","$340,000",{html:badge("Expiring","expiring")}],
-          ["CTR-003","CleanCo Janitorial","$87,500",{html:badge("Expired","expired")}]
+          ["CTR-003","CleanCo Janitorial","$87,500",{html:badge("Expired","expired")}],
+          ["CTR-004","Netsmart Tech","$210,000",{html:badge("Active","active")}]
         ]);
 
     case "payment-dash":
@@ -777,7 +905,8 @@ function appBody(appId, df, bf, brand) {
         + miniTbl(["RFP #","Vendor","Amount","Status"],[
           ["RFP-041","BSN Sports","$4,280",{html:badge("Approved","approved")}],
           ["RFP-040","Office Depot","$1,150",{html:badge("A/P Review","pending")}],
-          ["RFP-039","Sparks Electric","$6,900",{html:badge("Draft","draft")}]
+          ["RFP-039","Sparks Electric","$6,900",{html:badge("Draft","draft")}],
+          ["RFP-038","Grainger Inc","$2,340",{html:badge("Approved","approved")}]
         ]);
 
     case "payment-rfp":
@@ -789,7 +918,7 @@ function appBody(appId, df, bf, brand) {
           ["1","Athletic equipment","01-005-203","$2,450.00"],
           ["2","Uniforms – varsity","01-005-401","$1,830.00"]
         ])
-        + '<div style="text-align:right;margin-top:6px;font-size:10px;font-weight:700;font-family:'+dF+';color:var(--card-body-title)">Total: $4,280.00</div>'
+        + '<div style="text-align:right;margin-top:6px;font-size:11px;font-weight:700;font-family:'+dF+';color:var(--card-body-title)">Total: $4,280.00</div>'
         + '<div style="display:flex;gap:4px;margin-top:8px"><span class="mini-btn" style="background:'+p+';font-family:'+bF+'">Submit</span><span class="mini-btn" style="background:var(--surface-hover);color:var(--text-dim);font-family:'+bF+'">Save Draft</span></div>';
 
     case "payment-data":
@@ -799,7 +928,8 @@ function appBody(appId, df, bf, brand) {
         + miniTbl(["Vendor #","Vendor Name","City","State"],[
           ["12345","BSN SPORTS, LLC","Dallas","TX"],
           ["23456","OFFICE DEPOT","Boca Raton","FL"],
-          ["34567","AMAZON CAPITAL SVCS","Seattle","WA"]
+          ["34567","AMAZON CAPITAL SVCS","Seattle","WA"],
+          ["45678","GRAINGER INC","Lake Forest","IL"]
         ]);
 
     case "payment-users":
@@ -830,7 +960,7 @@ function appBody(appId, df, bf, brand) {
     case "debt-mgmt":
       return miniStats([["Outstanding","$28.4M"],["Issues","6"],["GO","$22.1M"],["COP","$4.8M"],["FP","$1.5M"]], p)
         + tabs(["All Debt","GO","COP","FP"], 0)
-        + '<div style="margin-bottom:6px;font-size:9px;font-weight:700;font-family:'+dF+';color:var(--card-body-title)">Annual Debt Service</div>'
+        + sectionHdr("Annual Debt Service")
         + chart([70,65,60,55,50,45,40,35,30,25])
         + '<div style="margin-top:8px"></div>'
         + miniTbl(["Issue","Type","Outstanding","Maturity"],[
@@ -848,34 +978,143 @@ function appBody(appId, df, bf, brand) {
       return '<div class="app-module-title" style="font-family:'+dF+'">Salaries &amp; FTE</div><div class="app-subtitle" style="font-family:'+bF+'">Teacher compensation by lane and step</div>'
         + '<div class="mini-form-row"><div style="flex:1"><div class="mini-form-label" style="font-family:'+bF+'">Your District</div><div class="mini-form-field" style="font-family:'+bF+'">'+(dn||"Select district…")+'</div></div></div>'
         + tabs(["Teachers","Admin","Support"], 0)
-        + '<div style="margin:6px 0 4px;font-size:9px;font-weight:700;font-family:'+dF+';color:var(--card-body-title)">What-If Scenario</div>'
-        + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span style="font-size:11px;font-weight:700;color:'+p+';font-family:'+dF+'">+3.5%</span><div style="flex:1;height:4px;border-radius:2px;background:var(--border);position:relative"><div style="width:35%;height:100%;border-radius:2px;background:'+p+'"></div></div></div>'
+        + sectionHdr("What-If Scenario")
+        + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span style="font-size:12px;font-weight:700;color:'+p+';font-family:'+dF+'">+3.5%</span><div style="flex:1;height:4px;border-radius:2px;background:var(--border);position:relative"><div style="width:35%;height:100%;border-radius:2px;background:'+p+'"></div></div></div>'
         + '<div class="mini-tabs" style="gap:1px"><span class="mini-tab active" style="background:'+p+';color:'+thC+';font-family:'+bF+';font-size:7px">BA</span><span class="mini-tab" style="font-family:'+bF+';font-size:7px">BA+20</span><span class="mini-tab" style="font-family:'+bF+';font-size:7px">MA</span><span class="mini-tab" style="font-family:'+bF+';font-size:7px">MA+30</span><span class="mini-tab" style="font-family:'+bF+';font-size:7px">EdD</span></div>';
 
     case "bench-adm":
       return '<div class="app-module-title" style="font-family:'+dF+'">ADM Detail</div><div class="app-subtitle" style="font-family:'+bF+'">'+(dn||"Select a district")+' · Average Daily Membership</div>'
         + tabs(["ADM Detail","Cohort ↘","Grade →","Year ↓"], 0)
-        + '<div style="font-size:8px;font-weight:600;font-family:'+dF+';color:var(--card-body-title);margin:6px 0 4px">ADM Summary</div>'
-        + heatmap(32)
-        + '<div style="margin-top:6px;font-size:7px;color:var(--text-faint);font-family:'+bF+'">Grades K–12 · FY2015–FY2025</div>';
+        + sectionHdr("ADM Summary")
+        + miniStats([["Latest Total ADM","28,758","","total enrollment"],["Elem (K-6)","15,686","","53.7%"],["Sec (7-12)","12,293","","42.0%"],["APU","31,217","","adjusted"]], p)
+        + sectionHdr("Average Daily Membership")
+        + buildCohortGrid(dF, bF, p, thC, false);
 
     case "bench-cohort":
-      return '<div class="app-module-title" style="font-family:'+dF+'">Cohort Survival</div><div class="app-subtitle" style="font-family:'+bF+'">Trace student cohorts across grades and years</div>'
+      return '<div class="app-module-title" style="font-family:'+dF+'">Cohort Survival</div><div class="app-subtitle" style="font-family:'+bF+'">'+(dn||"Select a district")+' · Tracking cohorts across grades</div>'
         + tabs(["ADM Detail","Cohort ↘","Grade →","Year ↓"], 1)
-        + miniStats([["Start","482"],["End","445"],["Survival","92.3%"]], p)
-        + heatmap(32);
+        + sectionHdr("Cohort Statistics")
+        + miniStats([["Terminal Survival","79.8%","green"],["Average","2,642","","ADM"],["Median","2,524","","ADM"],["Min","2,300","danger","2018"],["Max","3,076","green","2007"]], p)
+        + sectionHdr("Average Daily Membership")
+        + buildCohortGrid(dF, bF, p, thC, true);
 
     case "bench-oe":
-      return '<div class="app-module-title" style="font-family:'+dF+'">Open Enrollment</div><div class="app-subtitle" style="font-family:'+bF+'">'+(dn||"Select a district")+' · FY2025</div>'
-        + miniStats([["Total In","342","green"],["Total Out","218","warn"],["Net","+124","green"]], p)
-        + miniTbl(["Serving District","In","Out","Net"],[
-          ["Neighboring ISD #1","86","42","+44"],
-          ["Neighboring ISD #2","64","58","+6"],
-          ["Neighboring ISD #3","38","51","-13"]
-        ]);
+      return '<div class="app-module-title" style="font-family:'+dF+'">Open Enrollment</div><div class="app-subtitle" style="font-family:'+bF+'">'+(dn||"Select a district")+' · Fiscal Year 2025</div>'
+        + buildOEStats(dF, bF, p, thC)
+        + sectionHdr("Butterfly Chart")
+        + buildButterflyChart(dF, bF, p, s, thC);
 
     default: return '<div style="padding:20px;color:var(--text-faint)">Unknown app</div>';
   }
+}
+
+// ═══════ OPEN ENROLLMENT BUTTERFLY CHART ═══════
+function buildOEStats(dF, bF, p, thC) {
+  let h = '<div class="mini-stats" style="--stat-accent:'+p+'">';
+  const items = [
+    ["ADM","29,109","","total enrollment"],
+    ["Resident","28,549","","98.1% of ADM"],
+    ["Total In","560","green","1.9% of ADM"],
+    ["Total Out","6,116","danger","17.6% of residents"],
+    ["Net","-5,556","danger","net loss"],
+    ["Partners","54","","districts"]
+  ];
+  items.forEach(([label, val, cls, sub]) => {
+    h += '<div class="mini-stat"><div class="mini-stat-label" style="font-family:'+bF+'">'+label+'</div><div class="mini-stat-value'+(cls?' '+cls:'')+'" style="font-family:'+dF+'">'+val+'</div>'+(sub?'<div class="mini-stat-sub" style="font-family:'+bF+'">'+sub+'</div>':'')+'</div>';
+  });
+  h += '</div>';
+  // Proportion bar
+  h += '<div style="display:flex;height:14px;border-radius:4px;overflow:hidden;margin-bottom:10px;font-size:7px;font-weight:700;font-family:'+bF+'">';
+  h += '<div style="flex:0 0 2%;background:#2B6D51;color:#fff;display:flex;align-items:center;padding:0 4px;white-space:nowrap">IN 560</div>';
+  h += '<div style="flex:1;background:'+p+';color:'+thC+';display:flex;align-items:center;justify-content:center;white-space:nowrap">Resident 28,549 (81.0%)</div>';
+  h += '<div style="flex:0 0 17%;background:#FA050F;color:#fff;display:flex;align-items:center;justify-content:flex-end;padding:0 4px;white-space:nowrap">OUT 6,116</div>';
+  h += '</div>';
+  return h;
+}
+
+function buildButterflyChart(dF, bF, p, s, thC) {
+  // Sample partner district data, mimicking the screenshot
+  const partners = [
+    {name:"Lakeville",in:5,out:1,net:4,color:"#AF2936"},
+    {name:"Inver Grove Hts",in:7,out:4,net:3,color:"#007DC2"},
+    {name:"Anoka-Hennepin",in:31,out:33,net:-2,color:"#012d5d"},
+    {name:"Mahtomedi",in:0,out:5,net:-5,color:"#002369"},
+    {name:"South St. Paul",in:0,out:6,net:-6,color:"#121517"},
+    {name:"Centennial",in:0,out:6,net:-6,color:"#D2112A"},
+    {name:"White Bear Lake",in:0,out:7,net:-7,color:"#a63b02"},
+    {name:"Burnsville",in:9,out:17,net:-8,color:"#FFD334"},
+    {name:"Wayzata",in:6,out:14,net:-8,color:"#00447C"},
+    {name:"Eastern Carver Co.",in:1,out:11,net:-10,color:"#012f6b"},
+    {name:"Rosemount-AV-E",in:12,out:35,net:-23,color:"#0079A7"},
+    {name:"Mounds View",in:7,out:42,net:-35,color:"#005CAB"},
+    {name:"Spring Lake Park",in:6,out:66,net:-60,color:"#193369"},
+    {name:"Roseville",in:13,out:109,net:-96,color:"#ac0000"},
+    {name:"Brooklyn Center",in:29,out:137,net:-108,color:"#612B9C"},
+    {name:"Osseo",in:67,out:190,net:-123,color:"#3C1E56"},
+    {name:"Robbinsdale",in:92,out:971,net:-879,color:"#002D72"},
+  ];
+  const maxOut = Math.max(...partners.map(d => d.out));
+  const maxIn = Math.max(...partners.map(d => d.in));
+  const scale = 80; // max bar width in px
+
+  let h = '<div class="butterfly-chart" style="font-family:'+bF+'">';
+  // Header
+  h += '<div class="butterfly-header"><div style="width:80px;text-align:right">← Enrolling In</div><div style="width:22px">In</div><div style="flex:1">District</div><div style="width:30px">Net</div><div style="width:22px">Out</div><div style="width:80px">Enrolling Out →</div></div>';
+  partners.forEach(d => {
+    const inW = maxIn > 0 ? Math.round((d.in / maxIn) * scale) : 0;
+    const outW = maxOut > 0 ? Math.round((d.out / maxOut) * scale) : 0;
+    const netColor = d.net >= 0 ? '#2B6D51' : '#FA050F';
+    const netSign = d.net > 0 ? '+' : '';
+    h += '<div class="butterfly-row">';
+    h += '<div class="butterfly-in-bar-wrap"><div class="butterfly-in-bar" style="width:'+inW+'px;background:#2B6D51"></div></div>';
+    h += '<div class="butterfly-in-val" style="color:var(--text-mid)">'+d.in+'</div>';
+    h += '<div class="butterfly-district" style="background:'+d.color+'">'+d.name+'</div>';
+    h += '<div class="butterfly-net" style="color:'+netColor+'">'+netSign+d.net+'</div>';
+    h += '<div class="butterfly-out-val" style="color:var(--text-mid)">'+d.out+'</div>';
+    h += '<div class="butterfly-out-bar-wrap"><div class="butterfly-out-bar" style="width:'+outW+'px;background:#FA050F"></div></div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+// ═══════ COHORT DIAGONAL HEATMAP ═══════
+function buildCohortGrid(dF, bF, p, thC, showCohort) {
+  const years = ['07','08','09','10','11','12','13','14','15','16','17','18'];
+  const grades = ['K','1','2','3','4','5','6','7','8','9','10','11','12'];
+  // Base ADM values (simplified from screenshot)
+  const baseK = [3076,3013,3004,3202,3231,3277,3417,3356,3226,3122,2962,2934];
+
+  let h = '<div class="cohort-grid" style="font-family:'+bF+'"><table>';
+  // Header
+  h += '<thead><tr><th></th>';
+  years.forEach(y => { h += '<th>20'+y+'</th>'; });
+  h += '</tr></thead><tbody>';
+  // Rows
+  grades.forEach((gr, gi) => {
+    h += '<tr><td class="grade-label">'+gr+'</td>';
+    years.forEach((y, yi) => {
+      const isOnDiag = showCohort && (yi === gi);
+      const baseVal = baseK[yi] ? Math.round(baseK[yi] * (1 - gi*0.025 + (Math.random()-0.5)*0.04)) : '';
+      if (isOnDiag) {
+        const pct = gi === 0 ? '' : Math.round((1 - gi*0.016)*100) + '%';
+        h += '<td><div class="cohort-cell" style="background:'+p+';padding:1px 2px;font-family:'+dF+'">' + baseVal + (pct ? '<span class="cohort-pct">'+pct+'</span>' : '') + '</div></td>';
+      } else {
+        const dimVal = baseVal || '';
+        h += '<td style="color:var(--text-faint);font-size:6.5px">'+dimVal+'</td>';
+      }
+    });
+    h += '</tr>';
+  });
+  // Summary row
+  h += '<tr class="summary-row"><td class="grade-label row-label">Total</td>';
+  years.forEach((y, yi) => {
+    const total = Math.round(35701 - yi * 200 + (Math.random()-0.5)*400);
+    h += '<td style="font-family:'+dF+'">'+total.toLocaleString()+'</td>';
+  });
+  h += '</tr>';
+  h += '</tbody></table></div>';
+  return h;
 }
 // ═══════ BUILD CARD HTML ═══════
 function buildCardHTML(card) {
@@ -886,17 +1125,37 @@ function buildCardHTML(card) {
   const p = brand.p, s = brand.s;
   const thC = needsDarkText(p) ? "#000" : "#fff";
   const dls = df.name === "Cal Sans" ? "letter-spacing:0.5px;" : "";
+  const hasLogo = brand.n !== "0";
+  const logoPath = 'district-logos/' + brand.n + '.png';
+  const hamId = 'ham-' + card.id;
 
-  return '<div class="card '+(card.starred?'starred':'')+'" id="card-'+card.id+'" draggable="true" ondragstart="onDragStart(event,'+card.id+')" ondragover="onDragOver(event)" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'+card.id+')" ondragend="onDragEnd(event)">'
+  return '<div class="card '+(card.starred?'starred':'')+'" id="card-'+card.id+'" draggable="true" ondragstart="onDragStart(event,'+card.id+')" ondragover="onDragOver(event,'+card.id+')" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'+card.id+')" ondragend="onDragEnd(event)">'
+    + '<div class="drag-grip"><span></span><span></span><span></span><span></span><span></span><span></span></div>'
     + '<div class="fav-badge">★ Favorite</div>'
+    // Banner
     + '<div class="card-banner" style="background:'+p+'">'
     + '<div class="card-banner-inner">'
-    + '<svg class="card-banner-hamburger" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="'+thC+'" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>'
+    + '<svg class="card-banner-hamburger" onclick="toggleHamPanel(\''+hamId+'\')" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="'+thC+'" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>'
+    + (hasLogo ? '<img class="card-banner-logo" src="'+logoPath+'" alt="" onerror="this.style.display=\'none\'">' : '')
     + '<div class="card-banner-title" style="font-family:'+df.family+';'+dls+'color:'+thC+'">'+app.banner+'</div>'
     + '</div>'
     + '<div class="card-banner-accent" style="background:'+s+'"></div>'
     + '</div>'
+    // Hamburger Panel
+    + '<div class="card-ham-panel" id="'+hamId+'">'
+    + '<div class="card-ham-brand-row">'
+    + (hasLogo ? '<img class="card-ham-brand-logo" src="'+logoPath+'" alt="" onerror="this.style.display=\'none\'">' : '')
+    + '<div><div class="card-ham-brand-name" style="font-family:'+df.family+'">'+brand.name+'</div>'
+    + '<div class="card-ham-brand-num">District #'+brand.n+(brand.city?' · '+brand.city:'')+(brand.org?' · '+brand.org:'')+'</div></div>'
+    + '</div>'
+    + '<div class="card-ham-colors">'
+    + '<div><div class="card-ham-swatch" style="background:'+p+'"></div><div class="card-ham-swatch-label">Primary</div></div>'
+    + '<div><div class="card-ham-swatch" style="background:'+s+'"></div><div class="card-ham-swatch-label">Secondary</div></div>'
+    + '</div>'
+    + '</div>'
+    // App Body
     + '<div class="card-app-body">'+appBody(app.id, df, bf, brand)+'</div>'
+    // Footer
     + '<div class="card-footer">'
     + '<div class="card-font-labels">'
     + '<div><span class="tag">APP</span>&nbsp;&nbsp;'+app.name+'</div>'
@@ -910,8 +1169,15 @@ function buildCardHTML(card) {
     + '</div></div></div>';
 }
 
+// ═══════ HAMBURGER TOGGLE ═══════
+function toggleHamPanel(id) {
+  const panel = document.getElementById(id);
+  if (panel) panel.classList.toggle('open');
+}
+
 // ═══════ STATE & RENDER ═══════
 let cards = [], cardIdCounter = 0, showStarredOnly = false;
+const STORAGE_KEY = 'bondwood-workbench-state';
 
 function render() {
   const grid = document.getElementById("grid");
@@ -935,6 +1201,7 @@ function render() {
     grid.innerHTML = visible.map(buildCardHTML).join("");
     drawDonuts();
   }
+  updateSaveUI();
 }
 
 function addCard() {
@@ -946,14 +1213,122 @@ function addCard() {
   loadFont(FONTS[bodyIdx].import);
   cards.push({ id: cardIdCounter++, appIdx, brandIdx, displayIdx, bodyIdx, starred: false });
   render();
+  autoSave();
   window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
 }
 
-function removeCard(id) { cards = cards.filter(c => c.id !== id); render(); }
-function duplicateCard(id) { const s = cards.find(c => c.id === id); if (s) { cards.push({ ...s, id: cardIdCounter++, starred: false }); render(); } }
-function toggleStar(id) { const c = cards.find(c => c.id === id); if (c) { c.starred = !c.starred; render(); } }
+function removeCard(id) { cards = cards.filter(c => c.id !== id); render(); autoSave(); }
+function duplicateCard(id) { const s = cards.find(c => c.id === id); if (s) { cards.push({ ...s, id: cardIdCounter++, starred: false }); render(); autoSave(); } }
+function toggleStar(id) { const c = cards.find(c => c.id === id); if (c) { c.starred = !c.starred; render(); autoSave(); } }
 function toggleFavFilter() { showStarredOnly = !showStarredOnly; render(); }
-function clearAll() { if (confirm("Remove all cards?")) { cards = []; render(); } }
+function clearAll() { if (confirm("Remove all cards?")) { cards = []; render(); autoSave(); } }
+
+// ═══════ LOCALSTORAGE PERSISTENCE ═══════
+function getSerializableState() {
+  return {
+    version: 2,
+    theme: document.documentElement.getAttribute('data-theme'),
+    cards: cards.map(c => ({
+      appIdx: c.appIdx,
+      brandIdx: c.brandIdx,
+      displayIdx: c.displayIdx,
+      bodyIdx: c.bodyIdx,
+      starred: c.starred
+    }))
+  };
+}
+
+function saveState() {
+  try {
+    const state = getSerializableState();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const ind = document.getElementById('saveIndicator');
+    ind.textContent = '✓ Saved ' + cards.length + ' cards';
+    ind.classList.add('flash');
+    setTimeout(() => { ind.classList.remove('flash'); ind.textContent = ''; }, 2000);
+    updateSaveUI();
+  } catch(e) {
+    console.error('Save failed:', e);
+    alert('Could not save — localStorage may be full or disabled.');
+  }
+}
+
+function autoSave() {
+  // Debounced auto-save
+  clearTimeout(autoSave._timer);
+  autoSave._timer = setTimeout(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(getSerializableState()));
+      updateSaveUI();
+    } catch(e) { /* silent */ }
+  }, 500);
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const state = JSON.parse(raw);
+    if (!state || !state.cards || !state.cards.length) return false;
+
+    // Confirm if we have existing cards
+    if (cards.length > 0 && !confirm('Replace current ' + cards.length + ' card(s) with saved layout (' + state.cards.length + ' cards)?')) return false;
+
+    // Restore theme
+    if (state.theme) {
+      document.documentElement.setAttribute('data-theme', state.theme);
+      document.getElementById('themeLabel').textContent = state.theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    // Restore cards
+    cards = [];
+    cardIdCounter = 0;
+    state.cards.forEach(c => {
+      // Validate indices
+      if (c.appIdx >= 0 && c.appIdx < APPS.length &&
+          c.brandIdx >= 0 && c.brandIdx < DISTRICTS.length &&
+          c.displayIdx >= 0 && c.displayIdx < FONTS.length &&
+          c.bodyIdx >= 0 && c.bodyIdx < FONTS.length) {
+        loadFont(FONTS[c.displayIdx].import);
+        loadFont(FONTS[c.bodyIdx].import);
+        cards.push({
+          id: cardIdCounter++,
+          appIdx: c.appIdx,
+          brandIdx: c.brandIdx,
+          displayIdx: c.displayIdx,
+          bodyIdx: c.bodyIdx,
+          starred: !!c.starred
+        });
+      }
+    });
+    render();
+    const ind = document.getElementById('saveIndicator');
+    ind.textContent = '✓ Loaded ' + cards.length + ' cards';
+    ind.classList.add('flash');
+    setTimeout(() => { ind.classList.remove('flash'); ind.textContent = ''; }, 2000);
+    return true;
+  } catch(e) {
+    console.error('Load failed:', e);
+    return false;
+  }
+}
+
+function hasSavedState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const state = JSON.parse(raw);
+    return state && state.cards && state.cards.length > 0;
+  } catch(e) { return false; }
+}
+
+function updateSaveUI() {
+  const loadBtn = document.getElementById('btnLoad');
+  const saveBtn = document.getElementById('btnSave');
+  const has = hasSavedState();
+  loadBtn.style.display = has ? '' : 'none';
+  saveBtn.classList.toggle('has-save', has && cards.length > 0);
+}
 
 // ═══════ DONUT DRAWING ═══════
 function drawDonuts() {
@@ -973,13 +1348,41 @@ function drawDonuts() {
 
 // ═══════ DRAG & DROP ═══════
 let dragId = null;
-function onDragStart(e, id) { dragId = id; e.dataTransfer.effectAllowed = "move"; requestAnimationFrame(() => { const el = document.getElementById("card-" + id); if (el) el.classList.add("dragging"); }); }
-function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = "move"; }
-function onDragEnter(e) { e.preventDefault(); const card = e.currentTarget.closest('.card'); if(card) card.classList.add("drag-over"); }
-function onDragLeave(e) { const card = e.currentTarget.closest('.card'); if(card && !card.contains(e.relatedTarget)) card.classList.remove("drag-over"); }
+function onDragStart(e, id) {
+  dragId = id;
+  e.dataTransfer.effectAllowed = "move";
+  // Set a drag image (slight delay so the class applies)
+  requestAnimationFrame(() => {
+    const el = document.getElementById("card-" + id);
+    if (el) el.classList.add("dragging");
+  });
+}
+function onDragOver(e, targetId) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "move";
+  // Show position indicator
+  if (dragId === null || dragId === targetId) return;
+  const card = e.currentTarget.closest('.card');
+  if (!card) return;
+  const rect = card.getBoundingClientRect();
+  const midY = rect.top + rect.height / 2;
+  card.classList.remove('drag-over-top', 'drag-over-bottom');
+  if (e.clientY < midY) {
+    card.classList.add('drag-over-top');
+  } else {
+    card.classList.add('drag-over-bottom');
+  }
+}
+function onDragEnter(e) { e.preventDefault(); }
+function onDragLeave(e) {
+  const card = e.currentTarget.closest('.card');
+  if (card && !card.contains(e.relatedTarget)) {
+    card.classList.remove('drag-over', 'drag-over-top', 'drag-over-bottom');
+  }
+}
 function onDrop(e, targetId) {
   e.preventDefault();
-  const card = e.currentTarget.closest('.card'); if(card) card.classList.remove("drag-over");
+  document.querySelectorAll('.card').forEach(el => el.classList.remove('drag-over','drag-over-top','drag-over-bottom'));
   if (dragId === null || dragId === targetId) return;
   const fromIdx = cards.findIndex(c => c.id === dragId);
   const toIdx = cards.findIndex(c => c.id === targetId);
@@ -987,19 +1390,82 @@ function onDrop(e, targetId) {
   const [moved] = cards.splice(fromIdx, 1);
   cards.splice(toIdx, 0, moved);
   render();
+  autoSave();
 }
-function onDragEnd() { dragId = null; document.querySelectorAll(".card").forEach(el => el.classList.remove("dragging","drag-over")); }
+function onDragEnd() {
+  dragId = null;
+  document.querySelectorAll(".card").forEach(el => el.classList.remove("dragging","drag-over","drag-over-top","drag-over-bottom"));
+}
 
 // ═══════ QUICK COMBOS ═══════
 const QUICK_COMBOS = [
+  // ── Classic Bondwood defaults ──
   {label:"Bondwood Default",display:"Cal Sans",body:"Google Sans Flex",brand:"Bondwood Default"},
-  {label:"Edina Schools",display:"Cal Sans",body:"Google Sans Flex",brand:"Edina"},
-  {label:"Rochester Modern",display:"Plus Jakarta Sans",body:"DM Sans",brand:"Rochester"},
-  {label:"Minnetonka Classic",display:"Playfair Display",body:"Source Sans Pro",brand:"Minnetonka"},
-  {label:"St. Cloud Geo",display:"Space Grotesk",body:"Inter",brand:"St. Cloud"},
-  {label:"Duluth Editorial",display:"DM Serif Display",body:"Libre Franklin",brand:"Duluth"},
-  {label:"Osseo Warm",display:"Fraunces",body:"Nunito Sans",brand:"Osseo"},
-  {label:"Wayzata Sharp",display:"Sora",body:"Work Sans",brand:"Wayzata"},
+  {label:"Edina · Cal Sans",display:"Cal Sans",body:"Google Sans Flex",brand:"Edina"},
+
+  // ── Minneapolis metro core ──
+  {label:"Minneapolis · Playfair",display:"Playfair Display",body:"Source Sans Pro",brand:"Minneapolis"},
+  {label:"Minneapolis · Oswald",display:"Oswald",body:"Lato",brand:"Minneapolis"},
+  {label:"St. Paul · DM Serif",display:"DM Serif Display",body:"DM Sans",brand:"St. Paul"},
+  {label:"St. Paul · Fraunces",display:"Fraunces",body:"Nunito Sans",brand:"St. Paul"},
+
+  // ── South metro ──
+  {label:"Bloomington · Sora",display:"Sora",body:"Work Sans",brand:"Bloomington"},
+  {label:"Burnsville · Outfit",display:"Outfit",body:"Karla",brand:"Burnsville"},
+  {label:"Lakeville · Barlow",display:"Barlow",body:"Open Sans",brand:"Lakeville"},
+  {label:"Rosemount-AV-E · Lexend",display:"Lexend",body:"Noto Sans",brand:"Rosemount-Apple Valley-Eagan"},
+  {label:"Farmington · Rubik",display:"Rubik",body:"Mulish",brand:"Farmington"},
+  {label:"Inver Grove Hts · Jakarta",display:"Plus Jakarta Sans",body:"Libre Franklin",brand:"Inver Grove Heights"},
+  {label:"Prior Lake · Manrope",display:"Manrope",body:"Fira Sans",brand:"Prior Lake-Savage"},
+  {label:"Shakopee · Urbanist",display:"Urbanist",body:"PT Sans",brand:"Shakopee"},
+
+  // ── West metro ──
+  {label:"Minnetonka · Playfair",display:"Playfair Display",body:"Source Sans Pro",brand:"Minnetonka"},
+  {label:"Wayzata · Sora",display:"Sora",body:"Work Sans",brand:"Wayzata"},
+  {label:"Eden Prairie · Montserrat",display:"Montserrat",body:"Open Sans",brand:"Eden Prairie"},
+  {label:"Hopkins · Space Grotesk",display:"Space Grotesk",body:"Inter",brand:"Hopkins"},
+  {label:"St. Louis Park · EB Garamond",display:"EB Garamond",body:"Libre Franklin",brand:"St. Louis Park"},
+  {label:"Orono · Lora",display:"Lora",body:"Raleway",brand:"Orono"},
+  {label:"Westonka · Bitter",display:"Bitter",body:"Cabin",brand:"Westonka"},
+  {label:"Eastern Carver · Archivo",display:"Archivo",body:"DM Sans",brand:"Eastern Carver County"},
+
+  // ── North metro ──
+  {label:"Osseo · Fraunces",display:"Fraunces",body:"Nunito Sans",brand:"Osseo"},
+  {label:"Anoka-Hennepin · Exo 2",display:"Exo 2",body:"Roboto",brand:"Anoka-Hennepin"},
+  {label:"Robbinsdale · Quicksand",display:"Quicksand",body:"Poppins",brand:"Robbinsdale"},
+  {label:"Brooklyn Center · DM Sans",display:"DM Sans",body:"Inter",brand:"Brooklyn Center"},
+  {label:"Fridley · Titillium",display:"Titillium Web",body:"Noto Sans",brand:"Fridley"},
+  {label:"Columbia Heights · Geist",display:"Geist",body:"IBM Plex Sans",brand:"Columbia Heights"},
+  {label:"Spring Lake Park · Overpass",display:"Overpass",body:"Mulish",brand:"Spring Lake Park"},
+  {label:"Centennial · Raleway",display:"Raleway",body:"Lato",brand:"Centennial"},
+  {label:"Mounds View · Outfit",display:"Outfit",body:"Source Sans Pro",brand:"Mounds View"},
+  {label:"St. Francis · Josefin",display:"Josefin Sans",body:"Open Sans",brand:"St. Anthony-New Brighton"},
+
+  // ── East metro ──
+  {label:"Roseville · Manrope",display:"Manrope",body:"Karla",brand:"Roseville"},
+  {label:"N. St. Paul-MW-O · Poppins",display:"Poppins",body:"Fira Sans",brand:"North St. Paul-Maplewood Oakdale"},
+  {label:"White Bear Lake · Crimson",display:"Crimson Text",body:"Nunito",brand:"White Bear Lake"},
+  {label:"Stillwater · DM Serif",display:"DM Serif Display",body:"DM Sans",brand:"Stillwater"},
+  {label:"S. Washington Co. · Lexend",display:"Lexend",body:"Work Sans",brand:"South Washington County"},
+  {label:"Mahtomedi · Spline Sans",display:"Spline Sans",body:"PT Sans",brand:"Mahtomedi"},
+  {label:"Hastings · Roboto Slab",display:"Roboto Slab",body:"Roboto",brand:"Hastings"},
+
+  // ── Further metro + outstate AMSD ──
+  {label:"Rochester · Jakarta",display:"Plus Jakarta Sans",body:"DM Sans",brand:"Rochester"},
+  {label:"Rochester · Merriweather",display:"Merriweather",body:"Source Sans Pro",brand:"Rochester"},
+  {label:"Duluth · DM Serif",display:"DM Serif Display",body:"Libre Franklin",brand:"Duluth"},
+  {label:"Duluth · Zilla Slab",display:"Zilla Slab",body:"Barlow",brand:"Duluth"},
+  {label:"St. Cloud · Space Grotesk",display:"Space Grotesk",body:"Inter",brand:"St. Cloud"},
+  {label:"Elk River · Noto Serif",display:"Noto Serif",body:"Noto Sans",brand:"Elk River"},
+  {label:"Buffalo-HM · Libre Bask.",display:"Libre Baskerville",body:"Libre Franklin",brand:"Buffalo-Hanover-Montrose"},
+  {label:"St. Michael-AV · Arvo",display:"Arvo",body:"Open Sans",brand:"St. Michael-Albertville"},
+  {label:"Rockford · PT Serif",display:"PT Serif",body:"PT Sans",brand:"Rockford"},
+
+  // ── Serif-forward pairings ──
+  {label:"Richfield · Garamond",display:"EB Garamond",body:"Mulish",brand:"Richfield"},
+  {label:"W. St. Paul · Source Serif",display:"Source Serif Pro",body:"Source Sans Pro",brand:"West St. Paul-Mendota Hts-Eagan"},
+  {label:"S. St. Paul · Fraunces",display:"Fraunces",body:"Cabin",brand:"South St. Paul"},
+  {label:"Edina · Playfair",display:"Playfair Display",body:"Raleway",brand:"Edina"},
 ];
 
 function buildQuickCombos() {
@@ -1030,7 +1496,48 @@ function init() {
   buildFontSelect("csDisplay", fi("Cal Sans") >= 0 ? fi("Cal Sans") : 0);
   buildFontSelect("csBody", fi("Google Sans Flex") >= 0 ? fi("Google Sans Flex") : 0);
   buildQuickCombos();
-  render();
+
+  // Try to auto-load saved state on startup
+  const autoLoaded = loadStateQuiet();
+  if (!autoLoaded) render();
 }
+
+function loadStateQuiet() {
+  // Silent load on startup — no confirm prompt
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const state = JSON.parse(raw);
+    if (!state || !state.cards || !state.cards.length) return false;
+
+    if (state.theme) {
+      document.documentElement.setAttribute('data-theme', state.theme);
+      document.getElementById('themeLabel').textContent = state.theme === 'dark' ? 'Dark' : 'Light';
+    }
+
+    cards = [];
+    cardIdCounter = 0;
+    state.cards.forEach(c => {
+      if (c.appIdx >= 0 && c.appIdx < APPS.length &&
+          c.brandIdx >= 0 && c.brandIdx < DISTRICTS.length &&
+          c.displayIdx >= 0 && c.displayIdx < FONTS.length &&
+          c.bodyIdx >= 0 && c.bodyIdx < FONTS.length) {
+        loadFont(FONTS[c.displayIdx].import);
+        loadFont(FONTS[c.bodyIdx].import);
+        cards.push({
+          id: cardIdCounter++,
+          appIdx: c.appIdx,
+          brandIdx: c.brandIdx,
+          displayIdx: c.displayIdx,
+          bodyIdx: c.bodyIdx,
+          starred: !!c.starred
+        });
+      }
+    });
+    render();
+    return cards.length > 0;
+  } catch(e) { return false; }
+}
+
 document.addEventListener("DOMContentLoaded", init);
 </script></body></html>
