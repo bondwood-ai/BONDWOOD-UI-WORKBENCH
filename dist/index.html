@@ -81,12 +81,6 @@
   .custom-select-option.hidden { display:none; }
   .btn-add { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:10px 28px; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.15s; white-space:nowrap; flex-shrink:0; }
   .btn-add:hover { filter:brightness(1.15); }
-  .quick-row { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; align-items:center; max-height:68px; overflow-y:auto; padding-right:4px; }
-  .quick-row::-webkit-scrollbar { width:3px; } .quick-row::-webkit-scrollbar-thumb { background:var(--text-faint); border-radius:2px; }
-  .quick-label { font-size:10px; color:var(--text-faint); margin-right:4px; }
-  .quick-btn { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:4px 10px; font-size:10px; color:var(--text-dim); cursor:pointer; transition:all 0.15s; white-space:nowrap; font-family:'Inter',sans-serif; }
-  .quick-btn:hover { border-color:var(--accent); color:var(--accent); }
-
   /* ── GRID — wider cards ── */
   .grid-wrap { max-width:1600px; margin:0 auto; padding:24px 24px 60px; }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(480px,1fr)); gap:20px; }
@@ -119,7 +113,7 @@
   .card-ham-overlay.open { display:block; }
   .card-ham-drawer {
     position:absolute; top:0; left:0; bottom:0; width:220px; z-index:21;
-    background:#111; border-radius:12px 0 0 12px; overflow-y:auto;
+    border-radius:12px 0 0 12px; overflow-y:auto;
     transform:translateX(-100%); transition:transform 0.2s cubic-bezier(0.4,0,0.2,1);
     box-shadow:2px 0 12px rgba(0,0,0,0.4);
   }
@@ -229,6 +223,23 @@
   .cohort-grid .summary-row td { font-weight:700; font-size:6.5px; background:var(--surface-hover); color:var(--card-body-title); }
   .cohort-grid .summary-row .row-label { font-size:6px; }
 
+  /* ── SALARY COMPARISON BARS ── */
+  .salary-lanes { display:flex; gap:2px; flex-wrap:wrap; margin-bottom:6px; }
+  .salary-lane { padding:2px 5px; border-radius:3px; font-size:6.5px; font-weight:600; background:var(--surface-hover); border:1px solid var(--border); color:var(--text-dim); }
+  .salary-lane.active { color:#fff; border-color:transparent; }
+  .salary-info { padding:4px 8px; border-radius:4px; background:rgba(217,119,6,0.1); border:1px solid rgba(217,119,6,0.2); font-size:7px; color:#d97706; margin-bottom:8px; }
+  .salary-headers { display:flex; justify-content:space-between; font-size:7px; color:var(--text-faint); margin-bottom:6px; padding:0 4px; }
+  .salary-row { display:flex; align-items:center; gap:0; margin-bottom:5px; height:22px; }
+  .salary-rank { width:14px; font-size:9px; font-weight:600; color:var(--text-dim); text-align:right; flex-shrink:0; }
+  .salary-dot { width:8px; height:8px; border-radius:50%; margin:0 5px; flex-shrink:0; }
+  .salary-name { width:100px; font-size:8.5px; font-weight:600; color:var(--card-body-title); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex-shrink:0; }
+  .salary-entry-val { width:38px; font-size:7px; color:var(--text-dim); text-align:right; flex-shrink:0; padding-right:3px; font-variant-numeric:tabular-nums; }
+  .salary-bar-wrap { flex:1; height:18px; position:relative; display:flex; align-items:center; min-width:0; }
+  .salary-bar-entry { height:18px; border-radius:3px 0 0 3px; }
+  .salary-bar-top { height:18px; border-radius:0 3px 3px 0; opacity:0.45; }
+  .salary-median-label { position:absolute; left:0; right:0; text-align:center; font-size:8px; font-weight:700; color:#fff; text-shadow:0 1px 2px rgba(0,0,0,0.5); line-height:18px; pointer-events:none; }
+  .salary-top-val { width:42px; font-size:7px; color:var(--text-dim); text-align:left; flex-shrink:0; padding-left:3px; font-variant-numeric:tabular-nums; }
+
   /* Card Footer */
   .card-footer { padding:10px 18px 12px; border-top:1px solid var(--footer-border); display:flex; justify-content:space-between; align-items:flex-end; }
   .card-font-labels { font-size:9.5px; color:var(--text-dim); }
@@ -249,21 +260,15 @@
 </head>
 <body>
 <div class="top-bar"><div class="top-bar-inner"><div><h1>UI Workbench</h1><div class="sub">Bondwood — App Preview &amp; Typography Explorer</div></div><div class="top-bar-actions"><button class="btn-fav-filter" id="btnFavFilter" style="display:none;" onclick="toggleFavFilter()"></button><span class="card-count" id="cardCount">0 cards</span><button class="btn-save" id="btnSave" onclick="saveState()" title="Save current layout to browser">Save</button><button class="btn-save" id="btnLoad" style="display:none;" onclick="loadState()" title="Restore saved layout">Load</button><button class="btn-random" onclick="addRandomCards()" title="Add 12 random preview cards">Random 12</button><span class="save-indicator" id="saveIndicator"></span><button class="btn-clear" id="btnClear" style="display:none;" onclick="clearAll()">Clear all</button><div class="theme-toggle-wrap"><span class="theme-toggle-label" id="themeLabel">Dark</span><div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode"></div></div></div></div></div>
-<div class="controls-wrap"><div class="controls"><div class="control-group"><label>App Preview</label><div class="custom-select" id="csApp"></div></div><div class="control-group wide"><label>District Brand</label><div class="custom-select" id="csBrand"></div></div><div class="control-group wide"><label>Display / Title Font</label><div class="custom-select" id="csDisplay"></div></div><div class="control-group wide"><label>Body / UI Font</label><div class="custom-select" id="csBody"></div></div><button class="btn-add" onclick="addCard()">+ Add Preview</button></div><div class="quick-row" id="quickRow"><span class="quick-label">Quick combos:</span></div></div>
+<div class="controls-wrap"><div class="controls"><div class="control-group"><label>App Preview</label><div class="custom-select" id="csApp"></div></div><div class="control-group wide"><label>District Brand</label><div class="custom-select" id="csBrand"></div></div><div class="control-group wide"><label>Display / Title Font</label><div class="custom-select" id="csDisplay"></div></div><div class="control-group wide"><label>Body / UI Font</label><div class="custom-select" id="csBody"></div></div><button class="btn-add" onclick="addCard()">+ Add Preview</button></div></div>
 <div class="grid-wrap"><div class="grid" id="grid"></div><div class="empty-state" id="emptyState">Pick an app, brand, and fonts above — then click "+ Add Preview" to start comparing.</div></div>
 <script>
 const APPS = [
-  {id:"contract-mgmt",name:"Contract Management",group:"Contracts",banner:"Contract Management"},
   {id:"payment-dash",name:"Payment Mgmt: Dashboard",group:"Payments",banner:"Payment Management"},
-  {id:"payment-rfp",name:"Payment Mgmt: RFP Form",group:"Payments",banner:"Payment Management"},
-  {id:"payment-data",name:"Payment Mgmt: Data Mgmt",group:"Payments",banner:"Payment Management"},
-  {id:"payment-users",name:"Payment Mgmt: User Mgmt",group:"Payments",banner:"Payment Management"},
   {id:"budget-donut",name:"Budget Monitoring (Donut)",group:"Budget",banner:"Budget Monitoring"},
   {id:"budget-table",name:"Budget Monitoring (Table)",group:"Budget",banner:"Budget Monitoring"},
-  {id:"debt-mgmt",name:"Debt Management",group:"Debt",banner:"Debt Management"},
   {id:"bench-revenue",name:"Benchmarking: Revenues",group:"Benchmarking",banner:"MN K12 Benchmarking"},
   {id:"bench-salaries",name:"Benchmarking: Salaries & FTE",group:"Benchmarking",banner:"MN K12 Benchmarking"},
-  {id:"bench-adm",name:"Benchmarking: ADM Detail",group:"Benchmarking",banner:"MN K12 Benchmarking"},
   {id:"bench-cohort",name:"Benchmarking: Cohort Survival",group:"Benchmarking",banner:"MN K12 Benchmarking"},
   {id:"bench-oe",name:"Benchmarking: Open Enrollment",group:"Benchmarking",banner:"MN K12 Benchmarking"},
 ];
@@ -904,17 +909,6 @@ function appBody(appId, df, bf, brand) {
   const dn = brand.name !== "Bondwood Default" ? brand.name : "";
 
   switch(appId) {
-    case "contract-mgmt":
-      return '<div class="app-module-title" style="font-family:'+dF+'">Dashboard</div><div class="app-subtitle" style="font-family:'+bF+'">Viewing all contracts</div>'
-        + miniStats([["Total","10"],["Active","4"],["Expiring","3","warn"],["Expired","2","danger"],["Value","$2.4M"]], p)
-        + filter("Search contracts…","All Statuses")
-        + miniTbl(["Contract #","Vendor","Value","Status"],[
-          ["CTR-001","Acme Supplies","$125,000",{html:badge("Active","active")}],
-          ["CTR-002","TechPro Solutions","$340,000",{html:badge("Expiring","expiring")}],
-          ["CTR-003","CleanCo Janitorial","$87,500",{html:badge("Expired","expired")}],
-          ["CTR-004","Netsmart Tech","$210,000",{html:badge("Active","active")}]
-        ]);
-
     case "payment-dash":
       return '<div class="app-module-title" style="font-family:'+dF+'">Dashboard</div><div class="app-subtitle" style="font-family:'+bF+'">All payment requests</div>'
         + miniStats([["Total RFPs","24"],["In Progress","8"],["Approved","12"],["Overdue","3","danger"],["Amount","$48K"]], p)
@@ -924,38 +918,6 @@ function appBody(appId, df, bf, brand) {
           ["RFP-040","Office Depot","$1,150",{html:badge("A/P Review","pending")}],
           ["RFP-039","Sparks Electric","$6,900",{html:badge("Draft","draft")}],
           ["RFP-038","Grainger Inc","$2,340",{html:badge("Approved","approved")}]
-        ]);
-
-    case "payment-rfp":
-      return '<div class="app-module-title" style="font-family:'+dF+'">Request for Payment</div><div class="app-subtitle" style="font-family:'+bF+'">RFP-2025-041</div>'
-        + '<div style="margin-bottom:8px"><div class="mini-form-label" style="font-family:'+bF+'">Request Type</div><div class="mini-form-field" style="font-family:'+bF+'">Vendor Payment</div></div>'
-        + '<div class="mini-form-row"><div style="flex:1"><div class="mini-form-label" style="font-family:'+bF+'">Vendor Name</div><div class="mini-form-field" style="font-family:'+bF+'">BSN SPORTS, LLC</div></div><div style="flex:1"><div class="mini-form-label" style="font-family:'+bF+'">Vendor #</div><div class="mini-form-field" style="font-family:'+bF+'">12345</div></div></div>'
-        + '<div style="margin:8px 0 4px;font-size:10px;font-weight:600;font-family:'+bF+';color:var(--card-body-title)">Item Detail</div>'
-        + miniTbl(["Line","Description","Budget Code","Amount"],[
-          ["1","Athletic equipment","01-005-203","$2,450.00"],
-          ["2","Uniforms – varsity","01-005-401","$1,830.00"]
-        ])
-        + '<div style="text-align:right;margin-top:6px;font-size:11px;font-weight:700;font-family:'+dF+';color:var(--card-body-title)">Total: $4,280.00</div>'
-        + '<div style="display:flex;gap:4px;margin-top:8px"><span class="mini-btn" style="background:'+p+';font-family:'+bF+'">Submit</span><span class="mini-btn" style="background:var(--surface-hover);color:var(--text-dim);font-family:'+bF+'">Save Draft</span></div>';
-
-    case "payment-data":
-      return '<div class="app-module-title" style="font-family:'+dF+'">Data Management</div><div class="app-subtitle" style="font-family:'+bF+'">42 vendors · 186 budget codes</div>'
-        + tabs(["Vendors","Budget Codes","Restriction Groups"], 0)
-        + '<div class="mini-filter-bar"><input class="mini-search" style="font-family:'+bF+'" placeholder="Search vendors…" disabled><span class="mini-btn" style="background:'+p+';font-family:'+bF+'">+ Add</span></div>'
-        + miniTbl(["Vendor #","Vendor Name","City","State"],[
-          ["12345","BSN SPORTS, LLC","Dallas","TX"],
-          ["23456","OFFICE DEPOT","Boca Raton","FL"],
-          ["34567","AMAZON CAPITAL SVCS","Seattle","WA"],
-          ["45678","GRAINGER INC","Lake Forest","IL"]
-        ]);
-
-    case "payment-users":
-      return '<div class="app-module-title" style="font-family:'+dF+'">User Management</div><div class="app-subtitle" style="font-family:'+bF+'">5 users</div>'
-        + filter("Search users…","All Roles")
-        + miniTbl(["Name","Email","Roles"],[
-          ["Jane Smith","jane@district.edu",{html:'<span class="mini-badge" style="background:rgba(139,92,246,0.12);color:#7c3aed;font-family:'+bF+'">Admin</span>'}],
-          ["Mike Johnson","mike@district.edu",{html:'<span class="mini-badge" style="background:rgba(217,119,6,0.12);color:#92400e;font-family:'+bF+'">Manager</span>'}],
-          ["Sarah Williams","sarah@district.edu",{html:'<span class="mini-badge" style="background:rgba(7,40,235,0.1);color:#1a56db;font-family:'+bF+'">Viewer</span>'}]
         ]);
 
     case "budget-donut":
@@ -974,17 +936,6 @@ function appBody(appId, df, bf, brand) {
           ["Facilities","$340K","$290K","$19K","$31K","91%"]
         ]);
 
-    case "debt-mgmt":
-      return miniStats([["Outstanding","$28.4M"],["Issues","6"],["GO","$22.1M"],["COP","$4.8M"],["FP","$1.5M"]], p)
-        + tabs(["All Debt","GO","COP","FP"], 0)
-        + sectionHdr("Annual Debt Service")
-        + chart([70,65,60,55,50,45,40,35,30,25])
-        + '<div style="margin-top:8px"></div>'
-        + miniTbl(["Issue","Type","Outstanding","Maturity"],[
-          ["2020A GO","GO","$14.2M","2035"],
-          ["2022B COP","COP","$4.8M","2032"]
-        ]);
-
     case "bench-revenue":
       return '<div class="app-module-title" style="font-family:'+dF+'">Revenue Comparison</div><div class="app-subtitle" style="font-family:'+bF+'">General Education Revenue — FY2024 · Per ADM</div>'
         + miniStats([["Average","$7,842"],["Median","$7,650"],["Highest","$12,410","green"],["Lowest","$5,220","warn"]], p)
@@ -992,20 +943,12 @@ function appBody(appId, df, bf, brand) {
         + '<div style="margin-top:6px;font-size:7px;color:var(--text-faint);font-family:'+bF+'">12 districts · Sorted descending</div>';
 
     case "bench-salaries":
-      return '<div class="app-module-title" style="font-family:'+dF+'">Salaries &amp; FTE</div><div class="app-subtitle" style="font-family:'+bF+'">Teacher compensation by lane and step</div>'
-        + '<div class="mini-form-row"><div style="flex:1"><div class="mini-form-label" style="font-family:'+bF+'">Your District</div><div class="mini-form-field" style="font-family:'+bF+'">'+(dn||"Select district…")+'</div></div></div>'
-        + tabs(["Teachers","Admin","Support"], 0)
-        + sectionHdr("What-If Scenario")
-        + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><span style="font-size:12px;font-weight:700;color:'+p+';font-family:'+dF+'">+3.5%</span><div style="flex:1;height:4px;border-radius:2px;background:var(--border);position:relative"><div style="width:35%;height:100%;border-radius:2px;background:'+p+'"></div></div></div>'
-        + '<div class="mini-tabs" style="gap:1px"><span class="mini-tab active" style="background:'+p+';color:'+thC+';font-family:'+bF+';font-size:7px">BA</span><span class="mini-tab" style="font-family:'+bF+';font-size:7px">BA+20</span><span class="mini-tab" style="font-family:'+bF+';font-size:7px">MA</span><span class="mini-tab" style="font-family:'+bF+';font-size:7px">MA+30</span><span class="mini-tab" style="font-family:'+bF+';font-size:7px">EdD</span></div>';
-
-    case "bench-adm":
-      return '<div class="app-module-title" style="font-family:'+dF+'">ADM Detail</div><div class="app-subtitle" style="font-family:'+bF+'">'+(dn||"Select a district")+' · Average Daily Membership</div>'
-        + tabs(["ADM Detail","Cohort ↘","Grade →","Year ↓"], 0)
-        + sectionHdr("ADM Summary")
-        + miniStats([["Latest Total ADM","28,758","","total enrollment"],["Elem (K-6)","15,686","","53.7%"],["Sec (7-12)","12,293","","42.0%"],["APU","31,217","","adjusted"]], p)
-        + sectionHdr("Average Daily Membership")
-        + buildCohortGrid(dF, bF, p, thC, false);
+      return '<div class="app-module-title" style="font-family:'+dF+'">Salaries &amp; FTE</div>'
+        + '<div class="mini-form-label" style="font-family:'+bF+';margin-bottom:4px">Salary Lane</div>'
+        + buildSalaryLanes(bF, p, thC)
+        + '<div class="salary-info" style="font-family:'+bF+'"><strong>Multiple lanes selected</strong> — salaries use median across steps within each district.</div>'
+        + sectionHdr("District Comparison")
+        + buildSalaryBars(dF, bF, p, s);
 
     case "bench-cohort":
       return '<div class="app-module-title" style="font-family:'+dF+'">Cohort Survival</div><div class="app-subtitle" style="font-family:'+bF+'">'+(dn||"Select a district")+' · Tracking cohorts across grades</div>'
@@ -1133,6 +1076,63 @@ function buildCohortGrid(dF, bF, p, thC, showCohort) {
   h += '</tbody></table></div>';
   return h;
 }
+
+// ═══════ SALARY LANE TABS + BAR CHART ═══════
+function buildSalaryLanes(bF, p, thC) {
+  const lanes = ['All Lanes','BA','BA+10','BA+15','BA+20','BA+30','BA+40/MA','BA+45','BA+60','MA','MA+10','MA+15','MA+20','MA+30','MA+40/SP','MA+45','MA+60','SPEC','SPEC/PhD','PhD'];
+  let h = '<div class="salary-lanes">';
+  lanes.forEach((l, i) => {
+    h += '<span class="salary-lane'+(i===0?' active':'')+'" style="'+(i===0?'background:'+p+';color:'+thC+';':'')+' font-family:'+bF+'">'+l+'</span>';
+  });
+  return h + '</div>';
+}
+
+function buildSalaryBars(dF, bF, p, s) {
+  const districts = [
+    {name:"Wayzata",color:"#00447C",entry:52308,median:91530,top:123452},
+    {name:"Minnetonka",color:"#003865",entry:53366,median:88976,top:134840},
+    {name:"Eden Prairie",color:"#8B1A1A",entry:53023,median:86362,top:124404},
+    {name:"St. Louis Park",color:"#C5960C",entry:48967,median:83411,top:117783},
+    {name:"Edina",color:"#2B6D51",entry:52926,median:82827,top:124444},
+    {name:"Shakopee",color:"#C23B22",entry:52020,median:78744,top:126971},
+    {name:"St. Paul",color:"#2F7EC0",entry:59756,median:73554,top:115427},
+    {name:"Richfield",color:"#8B1A1A",entry:51675,median:70817,top:113765},
+    {name:"Rosemount-AV-E",color:"#0079A7",entry:52400,median:70691,top:108909},
+  ];
+  const peerEntry = 52400, peerMedian = 82827, peerTop = 123452;
+  const globalMin = 48000, globalMax = 135000;
+  const range = globalMax - globalMin;
+
+  let h = '<div class="salary-headers" style="font-family:'+bF+'">';
+  h += '<span>Peer Med. Entry $'+peerEntry.toLocaleString()+'</span>';
+  h += '<span>Peer Med. Salary $'+peerMedian.toLocaleString()+'</span>';
+  h += '<span>Peer Med. Top $'+peerTop.toLocaleString()+'</span>';
+  h += '</div>';
+
+  districts.forEach((d, i) => {
+    const entryPct = ((d.entry - globalMin) / range * 100);
+    const medianPct = ((d.median - globalMin) / range * 100);
+    const topPct = ((d.top - globalMin) / range * 100);
+    const barLeft = entryPct;
+    const barEntryW = medianPct - entryPct;
+    const barTopW = topPct - medianPct;
+
+    h += '<div class="salary-row">';
+    h += '<div class="salary-rank" style="font-family:'+dF+'">'+(i+1)+'</div>';
+    h += '<div class="salary-dot" style="background:'+d.color+'"></div>';
+    h += '<div class="salary-name" style="font-family:'+bF+'">'+d.name+'</div>';
+    h += '<div class="salary-entry-val" style="font-family:'+bF+'">$'+d.entry.toLocaleString()+'</div>';
+    h += '<div class="salary-bar-wrap">';
+    h += '<div style="width:'+barLeft+'%;flex-shrink:0"></div>';
+    h += '<div class="salary-bar-entry" style="width:'+barEntryW+'%;background:'+d.color+'"></div>';
+    h += '<div class="salary-bar-top" style="width:'+barTopW+'%;background:'+d.color+'"></div>';
+    h += '<div class="salary-median-label" style="font-family:'+dF+';left:'+barLeft+'%;width:'+(barEntryW+barTopW)+'%">$'+d.median.toLocaleString()+'</div>';
+    h += '</div>';
+    h += '<div class="salary-top-val" style="font-family:'+bF+'">$'+d.top.toLocaleString()+'</div>';
+    h += '</div>';
+  });
+  return h;
+}
 // ═══════ BUILD CARD HTML ═══════
 function buildCardHTML(card) {
   const app = APPS[card.appIdx];
@@ -1157,31 +1157,31 @@ function buildCardHTML(card) {
     // Hamburger overlay
     + '<div class="card-ham-overlay" id="'+overlayId+'" onclick="closeHamDrawer(\''+hamId+'\',\''+overlayId+'\')"></div>'
     // Hamburger slide-out drawer
-    + '<div class="card-ham-drawer" id="'+hamId+'">'
+    + '<div class="card-ham-drawer" id="'+hamId+'" style="background:'+p+'">'
     + '<div class="card-ham-drawer-inner">'
     // Header: Menu + X
     + '<div class="card-ham-header">'
-    + '<div class="card-ham-title" style="font-family:'+df.family+'">Menu</div>'
-    + '<button class="card-ham-close" onclick="closeHamDrawer(\''+hamId+'\',\''+overlayId+'\')">'
+    + '<div class="card-ham-title" style="font-family:'+df.family+';color:'+thC+'">Menu</div>'
+    + '<button class="card-ham-close" onclick="closeHamDrawer(\''+hamId+'\',\''+overlayId+'\')" style="color:'+thC+'">'
     + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>'
     + '</button>'
     + '</div>'
     // Logo centered
-    + '<div class="card-ham-logo-wrap">'
+    + '<div class="card-ham-logo-wrap" style="border-bottom-color:'+(needsDarkText(p)?'rgba(0,0,0,0.12)':'rgba(255,255,255,0.1)')+'">'
     + '<img src="'+(hasLogo ? logoPath : defaultLogoPath)+'" alt="" onerror="this.src=\''+defaultLogoPath+'\';this.onerror=null;">'
     + '</div>'
     // Navigation
-    + '<div class="card-ham-section-label" style="font-family:'+bf.family+'">Navigation</div>'
+    + '<div class="card-ham-section-label" style="font-family:'+bf.family+';color:'+(needsDarkText(p)?'rgba(0,0,0,0.4)':'rgba(255,255,255,0.45)')+'">Navigation</div>'
     + '<div class="card-ham-nav" style="font-family:'+bf.family+'">'
-    + navItems.map((item, i) => '<div class="card-ham-nav-item'+(i===0?' active':'')+'">'+item+'</div>').join('')
+    + navItems.map((item, i) => '<div class="card-ham-nav-item'+(i===0?' active':'')+'" style="color:'+(i===0?thC:(needsDarkText(p)?'rgba(0,0,0,0.6)':'rgba(255,255,255,0.7)'))+(i===0?';background:'+(needsDarkText(p)?'rgba(0,0,0,0.1)':'rgba(255,255,255,0.12)'):'')+'">'+item+'</div>').join('')
     + '</div>'
     // Brand section
-    + '<div class="card-ham-section-label" style="font-family:'+bf.family+'">Brand</div>'
-    + '<div class="card-ham-brand-name" style="font-family:'+df.family+'">'+brand.name+'</div>'
-    + '<div class="card-ham-brand-num" style="font-family:'+bf.family+'">'+(brand.n!=='0'?'District #'+brand.n:'Default')+(brand.city?' · '+brand.city:'')+'</div>'
+    + '<div class="card-ham-section-label" style="font-family:'+bf.family+';color:'+(needsDarkText(p)?'rgba(0,0,0,0.4)':'rgba(255,255,255,0.45)')+'">Brand</div>'
+    + '<div class="card-ham-brand-name" style="font-family:'+df.family+';color:'+thC+'">'+brand.name+'</div>'
+    + '<div class="card-ham-brand-num" style="font-family:'+bf.family+';color:'+(needsDarkText(p)?'rgba(0,0,0,0.5)':'rgba(255,255,255,0.45)')+'">'+(brand.n!=='0'?'District #'+brand.n:'Default')+(brand.city?' · '+brand.city:'')+'</div>'
     + '<div class="card-ham-colors">'
-    + '<div><div class="card-ham-swatch" style="background:'+p+'"></div><div class="card-ham-swatch-label">Primary</div></div>'
-    + '<div><div class="card-ham-swatch" style="background:'+s+'"></div><div class="card-ham-swatch-label">Secondary</div></div>'
+    + '<div><div class="card-ham-swatch" style="background:'+p+';border-color:'+(needsDarkText(p)?'rgba(0,0,0,0.2)':'rgba(255,255,255,0.2)')+'"></div><div class="card-ham-swatch-label" style="color:'+(needsDarkText(p)?'rgba(0,0,0,0.4)':'rgba(255,255,255,0.4)')+'">Primary</div></div>'
+    + '<div><div class="card-ham-swatch" style="background:'+s+';border-color:'+(needsDarkText(p)?'rgba(0,0,0,0.2)':'rgba(255,255,255,0.2)')+'"></div><div class="card-ham-swatch-label" style="color:'+(needsDarkText(p)?'rgba(0,0,0,0.4)':'rgba(255,255,255,0.4)')+'">Secondary</div></div>'
     + '</div>'
     + '</div></div>'
     // Banner (hamburger + title only — no logo)
@@ -1290,21 +1290,22 @@ function clearAll() { if (confirm("Remove all cards?")) { cards = []; render(); 
 // ═══════ RANDOM CARDS ═══════
 function addRandomCards() {
   const rng = (arr) => Math.floor(Math.random() * arr.length);
-  // Bias toward AMSD districts (70% chance) for more interesting brands
+  // Always use AMSD districts for random
   const amsdIndices = [];
-  const otherIndices = [];
   DISTRICTS.forEach((d, i) => {
     if (i === 0) return;
     if (d.org === 'AMSD') amsdIndices.push(i);
-    else otherIndices.push(i);
+  });
+  // Body font must be sans-serif
+  const sansBodyIndices = FONTS.map((f, i) => i).filter(i => {
+    const fam = FONTS[i].family;
+    return fam.includes('sans-serif') || !fam.includes('serif');
   });
   for (let i = 0; i < 12; i++) {
     const appIdx = rng(APPS);
-    const brandIdx = (Math.random() < 0.7 && amsdIndices.length)
-      ? amsdIndices[rng(amsdIndices)]
-      : (otherIndices.length ? otherIndices[rng(otherIndices)] : rng(DISTRICTS));
+    const brandIdx = amsdIndices[rng(amsdIndices)];
     const displayIdx = rng(FONTS);
-    const bodyIdx = rng(FONTS);
+    const bodyIdx = sansBodyIndices[rng(sansBodyIndices)];
     loadFont(FONTS[displayIdx].import);
     loadFont(FONTS[bodyIdx].import);
     cards.push({ id: cardIdCounter++, appIdx, brandIdx, displayIdx, bodyIdx, starred: false });
@@ -1488,96 +1489,6 @@ function onDragEnd() {
   document.querySelectorAll(".card").forEach(el => el.classList.remove("dragging","drag-over","drag-over-top","drag-over-bottom"));
 }
 
-// ═══════ QUICK COMBOS ═══════
-const QUICK_COMBOS = [
-  // ── Classic Bondwood defaults ──
-  {label:"Bondwood Default",display:"Cal Sans",body:"Google Sans Flex",brand:"Bondwood Default"},
-  {label:"Edina · Cal Sans",display:"Cal Sans",body:"Google Sans Flex",brand:"Edina"},
-
-  // ── Minneapolis metro core ──
-  {label:"Minneapolis · Playfair",display:"Playfair Display",body:"Source Sans Pro",brand:"Minneapolis"},
-  {label:"Minneapolis · Oswald",display:"Oswald",body:"Lato",brand:"Minneapolis"},
-  {label:"St. Paul · DM Serif",display:"DM Serif Display",body:"DM Sans",brand:"St. Paul"},
-  {label:"St. Paul · Fraunces",display:"Fraunces",body:"Nunito Sans",brand:"St. Paul"},
-
-  // ── South metro ──
-  {label:"Bloomington · Sora",display:"Sora",body:"Work Sans",brand:"Bloomington"},
-  {label:"Burnsville · Outfit",display:"Outfit",body:"Karla",brand:"Burnsville"},
-  {label:"Lakeville · Barlow",display:"Barlow",body:"Open Sans",brand:"Lakeville"},
-  {label:"Rosemount-AV-E · Lexend",display:"Lexend",body:"Noto Sans",brand:"Rosemount-Apple Valley-Eagan"},
-  {label:"Farmington · Rubik",display:"Rubik",body:"Mulish",brand:"Farmington"},
-  {label:"Inver Grove Hts · Jakarta",display:"Plus Jakarta Sans",body:"Libre Franklin",brand:"Inver Grove Heights"},
-  {label:"Prior Lake · Manrope",display:"Manrope",body:"Fira Sans",brand:"Prior Lake-Savage"},
-  {label:"Shakopee · Urbanist",display:"Urbanist",body:"PT Sans",brand:"Shakopee"},
-
-  // ── West metro ──
-  {label:"Minnetonka · Playfair",display:"Playfair Display",body:"Source Sans Pro",brand:"Minnetonka"},
-  {label:"Wayzata · Sora",display:"Sora",body:"Work Sans",brand:"Wayzata"},
-  {label:"Eden Prairie · Montserrat",display:"Montserrat",body:"Open Sans",brand:"Eden Prairie"},
-  {label:"Hopkins · Space Grotesk",display:"Space Grotesk",body:"Inter",brand:"Hopkins"},
-  {label:"St. Louis Park · EB Garamond",display:"EB Garamond",body:"Libre Franklin",brand:"St. Louis Park"},
-  {label:"Orono · Lora",display:"Lora",body:"Raleway",brand:"Orono"},
-  {label:"Westonka · Bitter",display:"Bitter",body:"Cabin",brand:"Westonka"},
-  {label:"Eastern Carver · Archivo",display:"Archivo",body:"DM Sans",brand:"Eastern Carver County"},
-
-  // ── North metro ──
-  {label:"Osseo · Fraunces",display:"Fraunces",body:"Nunito Sans",brand:"Osseo"},
-  {label:"Anoka-Hennepin · Exo 2",display:"Exo 2",body:"Roboto",brand:"Anoka-Hennepin"},
-  {label:"Robbinsdale · Quicksand",display:"Quicksand",body:"Poppins",brand:"Robbinsdale"},
-  {label:"Brooklyn Center · DM Sans",display:"DM Sans",body:"Inter",brand:"Brooklyn Center"},
-  {label:"Fridley · Titillium",display:"Titillium Web",body:"Noto Sans",brand:"Fridley"},
-  {label:"Columbia Heights · Geist",display:"Geist",body:"IBM Plex Sans",brand:"Columbia Heights"},
-  {label:"Spring Lake Park · Overpass",display:"Overpass",body:"Mulish",brand:"Spring Lake Park"},
-  {label:"Centennial · Raleway",display:"Raleway",body:"Lato",brand:"Centennial"},
-  {label:"Mounds View · Outfit",display:"Outfit",body:"Source Sans Pro",brand:"Mounds View"},
-  {label:"St. Francis · Josefin",display:"Josefin Sans",body:"Open Sans",brand:"St. Anthony-New Brighton"},
-
-  // ── East metro ──
-  {label:"Roseville · Manrope",display:"Manrope",body:"Karla",brand:"Roseville"},
-  {label:"N. St. Paul-MW-O · Poppins",display:"Poppins",body:"Fira Sans",brand:"North St. Paul-Maplewood Oakdale"},
-  {label:"White Bear Lake · Crimson",display:"Crimson Text",body:"Nunito",brand:"White Bear Lake"},
-  {label:"Stillwater · DM Serif",display:"DM Serif Display",body:"DM Sans",brand:"Stillwater"},
-  {label:"S. Washington Co. · Lexend",display:"Lexend",body:"Work Sans",brand:"South Washington County"},
-  {label:"Mahtomedi · Spline Sans",display:"Spline Sans",body:"PT Sans",brand:"Mahtomedi"},
-  {label:"Hastings · Roboto Slab",display:"Roboto Slab",body:"Roboto",brand:"Hastings"},
-
-  // ── Further metro + outstate AMSD ──
-  {label:"Rochester · Jakarta",display:"Plus Jakarta Sans",body:"DM Sans",brand:"Rochester"},
-  {label:"Rochester · Merriweather",display:"Merriweather",body:"Source Sans Pro",brand:"Rochester"},
-  {label:"Duluth · DM Serif",display:"DM Serif Display",body:"Libre Franklin",brand:"Duluth"},
-  {label:"Duluth · Zilla Slab",display:"Zilla Slab",body:"Barlow",brand:"Duluth"},
-  {label:"St. Cloud · Space Grotesk",display:"Space Grotesk",body:"Inter",brand:"St. Cloud"},
-  {label:"Elk River · Noto Serif",display:"Noto Serif",body:"Noto Sans",brand:"Elk River"},
-  {label:"Buffalo-HM · Libre Bask.",display:"Libre Baskerville",body:"Libre Franklin",brand:"Buffalo-Hanover-Montrose"},
-  {label:"St. Michael-AV · Arvo",display:"Arvo",body:"Open Sans",brand:"St. Michael-Albertville"},
-  {label:"Rockford · PT Serif",display:"PT Serif",body:"PT Sans",brand:"Rockford"},
-
-  // ── Serif-forward pairings ──
-  {label:"Richfield · Garamond",display:"EB Garamond",body:"Mulish",brand:"Richfield"},
-  {label:"W. St. Paul · Source Serif",display:"Source Serif Pro",body:"Source Sans Pro",brand:"West St. Paul-Mendota Hts-Eagan"},
-  {label:"S. St. Paul · Fraunces",display:"Fraunces",body:"Cabin",brand:"South St. Paul"},
-  {label:"Edina · Playfair",display:"Playfair Display",body:"Raleway",brand:"Edina"},
-];
-
-function buildQuickCombos() {
-  const row = document.getElementById("quickRow");
-  QUICK_COMBOS.forEach(combo => {
-    const btn = document.createElement("button");
-    btn.className = "quick-btn";
-    btn.textContent = combo.label;
-    btn.addEventListener("click", () => {
-      const dIdx = FONTS.findIndex(f => f.name === combo.display);
-      const bIdx = FONTS.findIndex(f => f.name === combo.body);
-      const brIdx = DISTRICTS.findIndex(d => d.name === combo.brand);
-      if (dIdx >= 0) { document.getElementById("csDisplay").dataset.selectedIdx = dIdx; document.getElementById("csDisplay").querySelector(".custom-select-trigger").textContent = combo.display; }
-      if (bIdx >= 0) { document.getElementById("csBody").dataset.selectedIdx = bIdx; document.getElementById("csBody").querySelector(".custom-select-trigger").textContent = combo.body; }
-      if (brIdx >= 0) { document.getElementById("csBrand").dataset.selectedIdx = brIdx; document.getElementById("csBrand").querySelector(".custom-select-trigger").textContent = combo.brand; }
-      addCard();
-    });
-    row.appendChild(btn);
-  });
-}
-
 // ═══════ INIT ═══════
 function init() {
   loadFont(FONTS[fi("Cal Sans")].import);
@@ -1586,7 +1497,6 @@ function init() {
   buildBrandSelect("csBrand");
   buildFontSelect("csDisplay", fi("Cal Sans") >= 0 ? fi("Cal Sans") : 0);
   buildFontSelect("csBody", fi("Google Sans Flex") >= 0 ? fi("Google Sans Flex") : 0);
-  buildQuickCombos();
 
   // Try to auto-load saved state on startup
   const autoLoaded = loadStateQuiet();
