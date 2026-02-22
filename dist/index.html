@@ -51,6 +51,8 @@
   .btn-save { background:rgba(74,122,255,0.12); color:var(--accent); border:none; border-radius:6px; padding:6px 14px; font-size:11px; font-weight:600; cursor:pointer; transition:all 0.15s; }
   .btn-save:hover { filter:brightness(1.15); }
   .btn-save.has-save { background:var(--accent); color:#fff; }
+  .btn-random { background:rgba(168,85,247,0.12); color:#a855f7; border:none; border-radius:6px; padding:6px 14px; font-size:11px; font-weight:600; cursor:pointer; transition:all 0.15s; }
+  .btn-random:hover { background:rgba(168,85,247,0.25); }
   .save-indicator { font-size:10px; color:var(--text-faint); transition:all 0.3s; }
   .save-indicator.flash { color:#2B6D51; font-weight:600; }
 
@@ -109,20 +111,35 @@
   .card-banner-inner { display:flex; align-items:center; gap:10px; padding-bottom:10px; }
   .card-banner-hamburger { cursor:pointer; flex-shrink:0; opacity:0.85; transition:opacity 0.15s; }
   .card-banner-hamburger:hover { opacity:1; }
-  .card-banner-logo { height:22px; width:auto; max-width:80px; object-fit:contain; flex-shrink:0; }
   .card-banner-title { font-weight:700; font-size:15px; line-height:1.1; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .card-banner-accent { height:3px; margin:0 -18px; }
 
-  /* Hamburger Panel */
-  .card-ham-panel { display:none; padding:12px 18px 14px; border-bottom:1px solid var(--border); background:var(--surface-hover); }
-  .card-ham-panel.open { display:block; }
-  .card-ham-brand-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-  .card-ham-brand-logo { height:32px; width:auto; max-width:120px; object-fit:contain; border-radius:4px; }
-  .card-ham-brand-name { font-size:12px; font-weight:700; color:var(--card-body-title); }
-  .card-ham-brand-num { font-size:10px; color:var(--text-dim); }
-  .card-ham-colors { display:flex; gap:6px; margin-top:4px; }
-  .card-ham-swatch { width:20px; height:20px; border-radius:4px; border:1px solid rgba(128,128,128,0.3); }
-  .card-ham-swatch-label { font-size:8px; color:var(--text-faint); text-align:center; margin-top:1px; }
+  /* Hamburger Slide-out Drawer (matches real app) */
+  .card-ham-overlay { display:none; position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.45); z-index:20; border-radius:12px; }
+  .card-ham-overlay.open { display:block; }
+  .card-ham-drawer {
+    position:absolute; top:0; left:0; bottom:0; width:220px; z-index:21;
+    background:#111; border-radius:12px 0 0 12px; overflow-y:auto;
+    transform:translateX(-100%); transition:transform 0.2s cubic-bezier(0.4,0,0.2,1);
+    box-shadow:2px 0 12px rgba(0,0,0,0.4);
+  }
+  .card-ham-drawer.open { transform:translateX(0); }
+  .card-ham-drawer-inner { padding:16px; }
+  .card-ham-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .card-ham-title { color:#fff; font-size:14px; font-weight:700; }
+  .card-ham-close { background:none; border:none; color:rgba(255,255,255,0.7); cursor:pointer; padding:2px; line-height:1; }
+  .card-ham-close:hover { color:#fff; }
+  .card-ham-logo-wrap { text-align:center; padding:10px 0 14px; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:14px; }
+  .card-ham-logo-wrap img { max-height:52px; max-width:100%; width:auto; object-fit:contain; }
+  .card-ham-section-label { color:rgba(255,255,255,0.45); font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .card-ham-nav { display:flex; flex-direction:column; gap:3px; margin-bottom:14px; }
+  .card-ham-nav-item { padding:6px 10px; border-radius:6px; font-size:10px; color:rgba(255,255,255,0.7); }
+  .card-ham-nav-item.active { background:rgba(255,255,255,0.12); color:#fff; font-weight:600; }
+  .card-ham-colors { display:flex; gap:8px; margin-top:8px; }
+  .card-ham-swatch { width:22px; height:22px; border-radius:4px; border:1px solid rgba(255,255,255,0.2); }
+  .card-ham-swatch-label { font-size:7px; color:rgba(255,255,255,0.4); text-align:center; margin-top:2px; }
+  .card-ham-brand-name { color:#fff; font-size:11px; font-weight:700; margin-bottom:1px; }
+  .card-ham-brand-num { font-size:9px; color:rgba(255,255,255,0.45); }
 
   /* Card App Body — more room */
   .card-app-body { padding:16px 18px 12px; min-height:280px; }
@@ -231,7 +248,7 @@
 </style>
 </head>
 <body>
-<div class="top-bar"><div class="top-bar-inner"><div><h1>UI Workbench</h1><div class="sub">Bondwood — App Preview &amp; Typography Explorer</div></div><div class="top-bar-actions"><button class="btn-fav-filter" id="btnFavFilter" style="display:none;" onclick="toggleFavFilter()"></button><span class="card-count" id="cardCount">0 cards</span><button class="btn-save" id="btnSave" onclick="saveState()" title="Save current layout to browser">💾 Save</button><button class="btn-save" id="btnLoad" style="display:none;" onclick="loadState()" title="Restore saved layout">📂 Load</button><span class="save-indicator" id="saveIndicator"></span><button class="btn-clear" id="btnClear" style="display:none;" onclick="clearAll()">Clear all</button><div class="theme-toggle-wrap"><span class="theme-toggle-label" id="themeLabel">Dark</span><div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode"></div></div></div></div></div>
+<div class="top-bar"><div class="top-bar-inner"><div><h1>UI Workbench</h1><div class="sub">Bondwood — App Preview &amp; Typography Explorer</div></div><div class="top-bar-actions"><button class="btn-fav-filter" id="btnFavFilter" style="display:none;" onclick="toggleFavFilter()"></button><span class="card-count" id="cardCount">0 cards</span><button class="btn-save" id="btnSave" onclick="saveState()" title="Save current layout to browser">Save</button><button class="btn-save" id="btnLoad" style="display:none;" onclick="loadState()" title="Restore saved layout">Load</button><button class="btn-random" onclick="addRandomCards()" title="Add 12 random preview cards">Random 12</button><span class="save-indicator" id="saveIndicator"></span><button class="btn-clear" id="btnClear" style="display:none;" onclick="clearAll()">Clear all</button><div class="theme-toggle-wrap"><span class="theme-toggle-label" id="themeLabel">Dark</span><div class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode"></div></div></div></div></div>
 <div class="controls-wrap"><div class="controls"><div class="control-group"><label>App Preview</label><div class="custom-select" id="csApp"></div></div><div class="control-group wide"><label>District Brand</label><div class="custom-select" id="csBrand"></div></div><div class="control-group wide"><label>Display / Title Font</label><div class="custom-select" id="csDisplay"></div></div><div class="control-group wide"><label>Body / UI Font</label><div class="custom-select" id="csBody"></div></div><button class="btn-add" onclick="addCard()">+ Add Preview</button></div><div class="quick-row" id="quickRow"><span class="quick-label">Quick combos:</span></div></div>
 <div class="grid-wrap"><div class="grid" id="grid"></div><div class="empty-state" id="emptyState">Pick an app, brand, and fonts above — then click "+ Add Preview" to start comparing.</div></div>
 <script>
@@ -1127,31 +1144,53 @@ function buildCardHTML(card) {
   const dls = df.name === "Cal Sans" ? "letter-spacing:0.5px;" : "";
   const hasLogo = brand.n !== "0";
   const logoPath = 'district-logos/' + brand.n + '.png';
+  const defaultLogoPath = 'bondwood-logo-modern-dark.png';
   const hamId = 'ham-' + card.id;
+  const overlayId = 'hamOverlay-' + card.id;
+
+  // Navigation items based on app group
+  const navItems = getNavItems(app);
 
   return '<div class="card '+(card.starred?'starred':'')+'" id="card-'+card.id+'" draggable="true" ondragstart="onDragStart(event,'+card.id+')" ondragover="onDragOver(event,'+card.id+')" ondragenter="onDragEnter(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event,'+card.id+')" ondragend="onDragEnd(event)">'
     + '<div class="drag-grip"><span></span><span></span><span></span><span></span><span></span><span></span></div>'
     + '<div class="fav-badge">★ Favorite</div>'
-    // Banner
-    + '<div class="card-banner" style="background:'+p+'">'
-    + '<div class="card-banner-inner">'
-    + '<svg class="card-banner-hamburger" onclick="toggleHamPanel(\''+hamId+'\')" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="'+thC+'" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>'
-    + (hasLogo ? '<img class="card-banner-logo" src="'+logoPath+'" alt="" onerror="this.style.display=\'none\'">' : '')
-    + '<div class="card-banner-title" style="font-family:'+df.family+';'+dls+'color:'+thC+'">'+app.banner+'</div>'
+    // Hamburger overlay
+    + '<div class="card-ham-overlay" id="'+overlayId+'" onclick="closeHamDrawer(\''+hamId+'\',\''+overlayId+'\')"></div>'
+    // Hamburger slide-out drawer
+    + '<div class="card-ham-drawer" id="'+hamId+'">'
+    + '<div class="card-ham-drawer-inner">'
+    // Header: Menu + X
+    + '<div class="card-ham-header">'
+    + '<div class="card-ham-title" style="font-family:'+df.family+'">Menu</div>'
+    + '<button class="card-ham-close" onclick="closeHamDrawer(\''+hamId+'\',\''+overlayId+'\')">'
+    + '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>'
+    + '</button>'
     + '</div>'
-    + '<div class="card-banner-accent" style="background:'+s+'"></div>'
+    // Logo centered
+    + '<div class="card-ham-logo-wrap">'
+    + '<img src="'+(hasLogo ? logoPath : defaultLogoPath)+'" alt="" onerror="this.src=\''+defaultLogoPath+'\';this.onerror=null;">'
     + '</div>'
-    // Hamburger Panel
-    + '<div class="card-ham-panel" id="'+hamId+'">'
-    + '<div class="card-ham-brand-row">'
-    + (hasLogo ? '<img class="card-ham-brand-logo" src="'+logoPath+'" alt="" onerror="this.style.display=\'none\'">' : '')
-    + '<div><div class="card-ham-brand-name" style="font-family:'+df.family+'">'+brand.name+'</div>'
-    + '<div class="card-ham-brand-num">District #'+brand.n+(brand.city?' · '+brand.city:'')+(brand.org?' · '+brand.org:'')+'</div></div>'
+    // Navigation
+    + '<div class="card-ham-section-label" style="font-family:'+bf.family+'">Navigation</div>'
+    + '<div class="card-ham-nav" style="font-family:'+bf.family+'">'
+    + navItems.map((item, i) => '<div class="card-ham-nav-item'+(i===0?' active':'')+'">'+item+'</div>').join('')
     + '</div>'
+    // Brand section
+    + '<div class="card-ham-section-label" style="font-family:'+bf.family+'">Brand</div>'
+    + '<div class="card-ham-brand-name" style="font-family:'+df.family+'">'+brand.name+'</div>'
+    + '<div class="card-ham-brand-num" style="font-family:'+bf.family+'">'+(brand.n!=='0'?'District #'+brand.n:'Default')+(brand.city?' · '+brand.city:'')+'</div>'
     + '<div class="card-ham-colors">'
     + '<div><div class="card-ham-swatch" style="background:'+p+'"></div><div class="card-ham-swatch-label">Primary</div></div>'
     + '<div><div class="card-ham-swatch" style="background:'+s+'"></div><div class="card-ham-swatch-label">Secondary</div></div>'
     + '</div>'
+    + '</div></div>'
+    // Banner (hamburger + title only — no logo)
+    + '<div class="card-banner" style="background:'+p+'">'
+    + '<div class="card-banner-inner">'
+    + '<svg class="card-banner-hamburger" onclick="openHamDrawer(\''+hamId+'\',\''+overlayId+'\')" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="'+thC+'" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>'
+    + '<div class="card-banner-title" style="font-family:'+df.family+';'+dls+'color:'+thC+'">'+app.banner+'</div>'
+    + '</div>'
+    + '<div class="card-banner-accent" style="background:'+s+'"></div>'
     + '</div>'
     // App Body
     + '<div class="card-app-body">'+appBody(app.id, df, bf, brand)+'</div>'
@@ -1169,10 +1208,35 @@ function buildCardHTML(card) {
     + '</div></div></div>';
 }
 
-// ═══════ HAMBURGER TOGGLE ═══════
-function toggleHamPanel(id) {
-  const panel = document.getElementById(id);
-  if (panel) panel.classList.toggle('open');
+// ═══════ NAV ITEMS PER APP GROUP ═══════
+function getNavItems(app) {
+  switch(app.group) {
+    case 'Contracts': return ['Contract Management','Audit Entries','My Account','User Management','Data Management'];
+    case 'Payments': return ['Payment Dashboard','RFP Form','Audit Entries','My Account','User Management','Data Management'];
+    case 'Budget': return ['Budget Monitoring','Audit Entries','My Account','Data Management'];
+    case 'Debt': return ['Debt Management','Audit Entries','My Account'];
+    case 'Benchmarking': return ['Revenues','Salaries & FTE','ADM Detail','Open Enrollment','My Account'];
+    default: return ['Dashboard','My Account'];
+  }
+}
+
+// ═══════ HAMBURGER DRAWER OPEN/CLOSE ═══════
+function openHamDrawer(drawerId, overlayId) {
+  const drawer = document.getElementById(drawerId);
+  const overlay = document.getElementById(overlayId);
+  if (!drawer || !overlay) return;
+  overlay.classList.add('open');
+  drawer.style.display = 'block';
+  drawer.offsetHeight; // force reflow
+  drawer.classList.add('open');
+}
+function closeHamDrawer(drawerId, overlayId) {
+  const drawer = document.getElementById(drawerId);
+  const overlay = document.getElementById(overlayId);
+  if (!drawer || !overlay) return;
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+  setTimeout(() => { drawer.style.display = ''; }, 200);
 }
 
 // ═══════ STATE & RENDER ═══════
@@ -1222,6 +1286,33 @@ function duplicateCard(id) { const s = cards.find(c => c.id === id); if (s) { ca
 function toggleStar(id) { const c = cards.find(c => c.id === id); if (c) { c.starred = !c.starred; render(); autoSave(); } }
 function toggleFavFilter() { showStarredOnly = !showStarredOnly; render(); }
 function clearAll() { if (confirm("Remove all cards?")) { cards = []; render(); autoSave(); } }
+
+// ═══════ RANDOM CARDS ═══════
+function addRandomCards() {
+  const rng = (arr) => Math.floor(Math.random() * arr.length);
+  // Bias toward AMSD districts (70% chance) for more interesting brands
+  const amsdIndices = [];
+  const otherIndices = [];
+  DISTRICTS.forEach((d, i) => {
+    if (i === 0) return;
+    if (d.org === 'AMSD') amsdIndices.push(i);
+    else otherIndices.push(i);
+  });
+  for (let i = 0; i < 12; i++) {
+    const appIdx = rng(APPS);
+    const brandIdx = (Math.random() < 0.7 && amsdIndices.length)
+      ? amsdIndices[rng(amsdIndices)]
+      : (otherIndices.length ? otherIndices[rng(otherIndices)] : rng(DISTRICTS));
+    const displayIdx = rng(FONTS);
+    const bodyIdx = rng(FONTS);
+    loadFont(FONTS[displayIdx].import);
+    loadFont(FONTS[bodyIdx].import);
+    cards.push({ id: cardIdCounter++, appIdx, brandIdx, displayIdx, bodyIdx, starred: false });
+  }
+  render();
+  autoSave();
+  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+}
 
 // ═══════ LOCALSTORAGE PERSISTENCE ═══════
 function getSerializableState() {
